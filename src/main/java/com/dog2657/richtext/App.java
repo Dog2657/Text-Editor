@@ -2,9 +2,7 @@ package com.dog2657.richtext;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,7 +11,7 @@ public class App extends Application {
     Viewer viewer;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage){
         viewer = new Viewer(1350, 700);
 
         BorderPane border = new BorderPane();
