@@ -1,0 +1,37 @@
+package com.dog2657.richtext;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+public class App extends Application {
+    Viewer viewer;
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        viewer = new Viewer(300, 300);
+
+        BorderPane border = new BorderPane();
+        border.setCenter(viewer);
+
+        Scene scene = new Scene(border, 300, 500);
+        scene.setOnKeyPressed(e -> {
+            String result = e.getText();
+            System.out.println(e.getCode().isLetterKey());
+
+        });
+
+        stage.setTitle("Rich text viewer");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
+    }
+}
