@@ -2,10 +2,10 @@ package com.dog2657.richtext;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 
 public class App extends Application {
     Viewer viewer;
@@ -19,9 +19,10 @@ public class App extends Application {
 
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
-            String result = e.getText();
-            System.out.println(e.getCode().isLetterKey());
-
+            switch (e.getCode()){
+                case LEFT -> viewer.moveCursorLeft();
+                case RIGHT -> viewer.moveCursorRight();
+            }
         });
 
         //Stops window being resized

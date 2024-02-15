@@ -5,8 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public abstract class FileManager {
-    public static char[] readFile(String path){
-        int bufferSize = 1024;
+    public static char[] readFile(String path, int bufferSize){
         char[] buffer = new char[bufferSize];
         try {
             FileReader reader = new FileReader(path);
