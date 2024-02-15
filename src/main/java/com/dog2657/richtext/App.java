@@ -14,17 +14,20 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        viewer = new Viewer(300, 300);
+        viewer = new Viewer(1350, 700);
 
         BorderPane border = new BorderPane();
         border.setCenter(viewer);
 
-        Scene scene = new Scene(border, 300, 500);
+        Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
             String result = e.getText();
             System.out.println(e.getCode().isLetterKey());
 
         });
+
+        //Stops window being resized
+        stage.setResizable(false);
 
         stage.setTitle("Rich text viewer");
         stage.setScene(scene);

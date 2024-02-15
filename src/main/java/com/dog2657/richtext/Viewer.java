@@ -10,11 +10,21 @@ import javafx.scene.text.TextAlignment;
 
 
 public class Viewer extends Canvas {
-    char[] buffer = FileManager.readFile("/Users/reece/Documents/1.Coding_Projects/Java/Rich Text/src/main/resources/test.txt");
-    int cursorLocation = 0;
+    char[] buffer;
+    int fontSize;
+    double fontWidth;
+    Font font;
+
+    int cursor = 3;
 
     public Viewer(int width, int height){
         super(width, height);
+
+        buffer = FileManager.readFile("src/main/resources/test.txt");
+
+        fontSize = 15;
+        font = new Font("Andale Mono", fontSize);
+        fontWidth = getFontWidth(font);
 
         this.render();
     }
@@ -25,7 +35,7 @@ public class Viewer extends Canvas {
         gc.setFill(Color.rgb(31, 32, 32));
         gc.fillRect(0,0, this.getWidth(), this.getHeight());
 
-        Font font = new Font("Andale Mono", 15);
+
 
         gc.setFont(font);
         gc.setFill(Color.WHITESMOKE);
@@ -34,8 +44,12 @@ public class Viewer extends Canvas {
 
 
         gc.setStroke(Color.RED);
-        double fontWidth = getFontWidth(font);
-        gc.strokeLine(fontWidth * 3, 0, fontWidth * 3, 15);
+
+
+        Location cursorLoc = getCursorLocation();
+        gc.strokeLine(cursorLoc.x, 0, cursorLoc.x, fontSize);
+
+        System.out.println(150 * fontWidth);
     }
 
 
@@ -45,7 +59,10 @@ public class Viewer extends Canvas {
         return text.getBoundsInLocal().getWidth();
     }
 
+    public Location getCursorLocation(){
+        double fontWidth = getFontWidth(font);
 
-
+        return new Location(fontWidth * cursor, 0);
+    }
 
 }
