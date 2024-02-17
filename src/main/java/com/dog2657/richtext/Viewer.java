@@ -31,6 +31,7 @@ public class Viewer extends Canvas {
         this.render();
     }
 
+
     private void render(){
         GraphicsContext gc = this.getGraphicsContext2D();
 

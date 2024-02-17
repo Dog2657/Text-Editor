@@ -17,7 +17,7 @@ public class Navigation extends HBox {
 
     private Button fileOpenButton(Stage stage){
         Button button = new Button("Add");
-        button.setStyle("-fx-border-width: 0px; -fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand !important;");
+        button.setStyle("-fx-border-width: 0px; -fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand !important; -fx-padding: 0px;");
 
         button.setOnAction(event -> {
             FileChooser chooser = new FileChooser();
