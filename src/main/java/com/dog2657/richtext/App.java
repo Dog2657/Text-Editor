@@ -2,9 +2,7 @@ package com.dog2657.richtext;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
@@ -14,7 +12,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage){
+        //MVC architecture
         viewer = new Viewer(1350, 700);
+        Model.getInstance().setViewer(viewer);
+
+
+
+
         navigation = new Navigation(stage);
 
         BorderPane border = new BorderPane();

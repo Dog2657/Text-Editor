@@ -2,7 +2,6 @@ package com.dog2657.richtext;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -16,16 +15,16 @@ public class Navigation extends HBox {
     }
 
     private Button fileOpenButton(Stage stage){
-        Button button = new Button("Add");
+        Button button = new Button("Open");
         button.setStyle("-fx-border-width: 0px; -fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand !important; -fx-padding: 0px;");
 
         button.setOnAction(event -> {
             FileChooser chooser = new FileChooser();
 
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-
             File file = chooser.showOpenDialog(stage);
-            System.out.println(file);
+
+            Controller.openFile(file.getPath());
         });
 
         return button;
