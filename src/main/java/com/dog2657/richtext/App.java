@@ -27,15 +27,15 @@ public class App extends Application {
 
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
+            System.out.println(e.getCode());
             switch (e.getCode()){
-                case LEFT -> viewer.moveCursorLeft();
-                case RIGHT -> viewer.moveCursorRight();
+                case LEFT -> {
+                    System.out.println("Left");
+                    Controller.moveCursorLeft(1);
+                }
+                case RIGHT -> Controller.moveCursorRight(1);
             }
         });
-
-        /*FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        fileChooser.showOpenDialog(stage);*/
 
 
         //Stops window being resized

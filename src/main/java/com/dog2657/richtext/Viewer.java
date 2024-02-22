@@ -13,8 +13,6 @@ public class Viewer extends Canvas {
     double fontWidth;
     Font font;
 
-    int cursor = 3;
-
     public Viewer(int width, int height){
         super(width, height);
 
@@ -46,24 +44,6 @@ public class Viewer extends Canvas {
         render();
     }
 
-    public void moveCursorLeft(){
-        if(cursor > 0)
-            cursor--;
-        else
-            cursor = 0;
-
-        render();
-    }
-
-    public void moveCursorRight(){
-        /*if(cursor < bufferSize)
-            cursor++;
-        else
-            cursor = bufferSize;
-
-        render();
-        TODO: Move to controller*/
-    }
 
     private double getFontWidth(Font font){
         Text text = new Text("A");
@@ -74,7 +54,7 @@ public class Viewer extends Canvas {
     public Location getCursorLocation(){
         double fontWidth = getFontWidth(font);
 
-        return new Location(fontWidth * cursor, 0);
+        return new Location(fontWidth * Model.getInstance().getCursor(), 0);
     }
 
 

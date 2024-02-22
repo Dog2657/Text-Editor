@@ -2,9 +2,11 @@ package com.dog2657.richtext;
 
 public class Model {
     //TODO: Add dynamic buffer size
-    int bufferSize = 1024;
+    private int bufferSize = 1024;
 
-    char[] buffer = new char[bufferSize];
+    private char[] buffer = new char[bufferSize];
+
+    private int cursor = 3;
 
     private static Model instance;
     private Viewer viewer;
@@ -20,6 +22,15 @@ public class Model {
     public void setBuffer(char[] buffer){
         this.buffer = buffer;
         viewer.update();
+    }
+
+    public int getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(int cursor) {
+        this.cursor = cursor;
+        this.viewer.update();
     }
 
     public char[] getBuffer(){
