@@ -7,22 +7,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 
+
 public class Viewer extends Canvas {
-    char[] buffer;
-
-    //TODO: Add dynamic buffer size
-    int bufferSize = 1024;
-
     int fontSize;
     double fontWidth;
     Font font;
 
-    int cursor = 3;
-
     public Viewer(int width, int height){
         super(width, height);
-
-        buffer = FileManager.readFile("src/main/resources/test.txt", bufferSize);
 
         fontSize = 15;
         font = new Font("Andale Mono", fontSize);
@@ -30,6 +22,7 @@ public class Viewer extends Canvas {
 
         this.render();
     }
+
 
     private void render(){
         GraphicsContext gc = this.getGraphicsContext2D();
@@ -39,7 +32,7 @@ public class Viewer extends Canvas {
 
         gc.setFont(font);
         gc.setFill(Color.WHITESMOKE);
-        gc.fillText(new String(buffer), 0, 15);
+        gc.fillText(new String(Model.getInstance().getBuffer()), 0, 15);
 
         gc.setStroke(Color.RED);
 
@@ -47,23 +40,10 @@ public class Viewer extends Canvas {
         gc.strokeLine(cursorLoc.x, 0, cursorLoc.x, fontSize);
     }
 
-    public void moveCursorLeft(){
-        if(cursor > 0)
-            cursor--;
-        else
-            cursor = 0;
-
+    public void update(){
         render();
     }
 
-    public void moveCursorRight(){
-        if(cursor < bufferSize)
-            cursor++;
-        else
-            cursor = bufferSize;
-
-        render();
-    }
 
     private double getFontWidth(Font font){
         Text text = new Text("A");
@@ -74,7 +54,8 @@ public class Viewer extends Canvas {
     public Location getCursorLocation(){
         double fontWidth = getFontWidth(font);
 
-        return new Location(fontWidth * cursor, 0);
+        return new Location(fontWidth * Model.getInstance().getCursor(), 0);
     }
+
 
 }

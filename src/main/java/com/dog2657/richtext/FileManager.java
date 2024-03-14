@@ -1,19 +1,28 @@
 package com.dog2657.richtext;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public abstract class FileManager {
-    public static char[] readFile(String path, int bufferSize){
+
+    public static char[] readFile(String pathString) throws IOException {
+        Path path = Path.of(pathString);
+
+        long size = Files.size(path);
+        if(size > Integer.MAX_VALUE)
+            throw new IOException("File size is bigger than buffer");
+
+        return readFile(pathString, (int) size);
+    }
+
+    public static char[] readFile(String path, int bufferSize) throws IOException {
         char[] buffer = new char[bufferSize];
-        try {
-            FileReader reader = new FileReader(path);
-            reader.read(buffer, 0, bufferSize);
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("File read failed" + e.getMessage());
-        }
+
+        FileReader reader = new FileReader(path);
+        reader.read(buffer, 0, bufferSize);
+        reader.close();
+
 
         return  buffer;
     }
