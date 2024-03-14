@@ -4,6 +4,7 @@ public class Model {
     //TODO: Add dynamic buffer size
     private int bufferSize = 1024;
 
+    private String fileLocation;
     private char[] buffer = new char[bufferSize];
 
     private int cursor = 3;
@@ -22,6 +23,14 @@ public class Model {
     public void setBuffer(char[] buffer){
         this.buffer = buffer;
         viewer.update();
+    }
+
+    public String getFileLocation() {
+        return fileLocation;
+    }
+
+    public void setFileLocation(String fileLocation) {
+        this.fileLocation = fileLocation;
     }
 
     public int getCursor() {

@@ -1,5 +1,6 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.components.NavigationButton;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
@@ -15,8 +16,7 @@ public class Navigation extends HBox {
     }
 
     private Button fileOpenButton(Stage stage){
-        Button button = new Button("Open");
-        button.setStyle("-fx-border-width: 0px; -fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand !important; -fx-padding: 0px;");
+        NavigationButton button = new NavigationButton("Open");
 
         button.setOnAction(event -> {
             FileChooser chooser = new FileChooser();
@@ -26,6 +26,14 @@ public class Navigation extends HBox {
 
             Controller.openFile(file.getPath());
         });
+
+        return button;
+    }
+
+    private Button fileSaveButton(Stage stage){
+        NavigationButton button = new NavigationButton("Save");
+
+        button.setOnAction(event -> Controller.saveFile(Model.getInstance().getFileLocation()));
 
         return button;
     }

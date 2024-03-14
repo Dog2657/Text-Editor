@@ -14,6 +14,10 @@ public abstract class Controller {
         }
     }
 
+    public static void saveFile(String path){
+        FileManager.saveFile(path, Model.getInstance().getBuffer());
+    }
+
     public static void moveCursorLeft(int moves){
         int cursor = Model.getInstance().getCursor();
         cursor += moves;
