@@ -3,6 +3,7 @@ package com.dog2657.richtext;
 import com.dog2657.richtext.components.NavigationButton;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -12,7 +13,7 @@ public class Navigation extends HBox {
     public Navigation(Stage primaryStage){
         this.setStyle("-fx-background-color: rgb(31, 32, 32)");
 
-        this.getChildren().addAll(fileOpenButton(primaryStage));
+        this.getChildren().addAll(fileOpenButton(primaryStage), fileSaveButton(primaryStage));
     }
 
     private Button fileOpenButton(Stage stage){
@@ -33,7 +34,17 @@ public class Navigation extends HBox {
     private Button fileSaveButton(Stage stage){
         NavigationButton button = new NavigationButton("Save");
 
-        button.setOnAction(event -> Controller.saveFile(Model.getInstance().getFileLocation()));
+        button.setOnAction(event -> {
+            if(Model.getInstance().getFileLocation() == null){
+                DirectoryChooser chooser = new DirectoryChooser();
+                File file = chooser.showDialog(stage);
+
+                Model.getInstance().setFileLocation(file + "/untitled.txt");
+            }
+
+            Controller.saveFile(Model.getInstance().getFileLocation());
+            System.out.println("file save");
+        });
 
         return button;
     }
