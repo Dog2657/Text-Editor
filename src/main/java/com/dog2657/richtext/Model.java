@@ -25,6 +25,11 @@ public class Model {
         viewer.update();
     }
 
+    public void addToBuffer(char character){
+        this.buffer[++cursor] = character;
+        viewer.update();
+    }
+
     public String getFileLocation() {
         return fileLocation;
     }
