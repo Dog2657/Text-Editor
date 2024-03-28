@@ -8,6 +8,7 @@ public abstract class Controller {
             char[] fileResult = FileManager.readFile(path);
 
             Model.getInstance().setBuffer(fileResult);
+            Model.getInstance().setFileLocation(path);
         } catch (IOException e) {
             //TODO: Add user modal message
             throw new RuntimeException(e);
