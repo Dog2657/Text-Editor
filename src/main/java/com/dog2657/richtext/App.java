@@ -27,13 +27,15 @@ public class App extends Application {
 
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
-            System.out.println(e);
             switch (e.getCode()){
                 case LEFT -> {
                     System.out.println("Left");
                     Controller.moveCursorLeft(1);
                 }
                 case RIGHT -> Controller.moveCursorRight(1);
+                default -> {
+                    Controller.addCharacter( e.getText().toCharArray()[0] );
+                }
             }
         });
 

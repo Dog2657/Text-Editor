@@ -19,6 +19,12 @@ public abstract class Controller {
         FileManager.saveFile(path, Model.getInstance().getBuffer());
     }
 
+    public static void addCharacter(char character){
+        //TODO: Add character check
+        Model.getInstance().addToBuffer(character);
+
+    }
+
     public static void moveCursorLeft(int moves){
         int cursor = Model.getInstance().getCursor();
         cursor += moves;
