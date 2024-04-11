@@ -7,7 +7,7 @@ public class Model {
     private String fileLocation;
     private char[] buffer = new char[bufferSize];
 
-    private int cursor = 3;
+    private int cursor = 0;
 
     private static Model instance;
     private Viewer viewer;
