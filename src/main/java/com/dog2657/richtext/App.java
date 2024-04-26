@@ -33,8 +33,13 @@ public class App extends Application {
                     Controller.moveCursorLeft(1);
                 }
                 case RIGHT -> Controller.moveCursorRight(1);
+                case SPACE -> Controller.addCharacter(' ');
                 default -> {
-                    Controller.addCharacter( e.getText().toCharArray()[0] );
+                    try {
+                        Controller.addCharacter(e.getText().toCharArray()[0]);
+                    }catch (Exception error){
+                        System.out.println("\n\nInvalid character: " + e.getText() + "\n\n");
+                    }
                 }
             }
         });
