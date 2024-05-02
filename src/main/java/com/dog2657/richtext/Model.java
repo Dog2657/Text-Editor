@@ -14,7 +14,9 @@ public class Model {
 
     private String data_original = "";
     private String data_add = "";
+
     private LinkedList<Piece> data_pieces = new LinkedList<>();
+    private int file_total_length = 0;
 
     private int cursor = 0;
 
@@ -56,6 +58,7 @@ public class Model {
     public void set_data_original(String data_original){
         this.data_original = data_original;
         this.data_pieces.add(new Piece(0, data_original.length(), "original"));
+        this.file_total_length = data_original.length();
     }
 
     public String get_text_output(){
@@ -72,11 +75,47 @@ public class Model {
     }
 
     public void add_text(String text){
-        if(cursor <= 0){
-            this.data_pieces.add(new Piece(cursor, data_original.length(), "add"));
+        int start = this.data_add.length();
+        this.data_add += text;
+
+        //Middle Piece
+        Piece data = new Piece(start, text.length(), "add");
+
+        if(cursor <= 0)
+            this.data_pieces.add(0, data);
+
+        else if(cursor >= file_total_length)
+            this.data_pieces.add(data);
+
+        else{
+            Piece start_piece = this.data_pieces.get(0);
+            int N = 0;
+            int position = 0;
+
+            for (int i=0; i<this.data_pieces.size(); i++) {
+                start_piece = this.data_pieces.get(i);
+                N += start_piece.getLength();
+                position = i;
+
+                if(N + start_piece.getLength() >= cursor)
+                    break;
+            }
+
+            int n = N - cursor ;
+
+            Piece end_piece = start_piece.clone();
+            end_piece.setLength(n);
+            end_piece.setStart(end_piece.getStart() + n);
+
+            start_piece.setLength(n);
+
+            this.data_pieces.add(position+1, data);
+            this.data_pieces.add(position+2, end_piece);
         }
 
+        file_total_length += text.length();
     }
+
 
     public void delete_text(){
 

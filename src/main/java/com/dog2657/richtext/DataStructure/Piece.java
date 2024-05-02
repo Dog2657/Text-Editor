@@ -23,4 +23,25 @@ public class Piece {
     public String getSource() {
         return source;
     }
+
+    public Piece clone(){
+        return new Piece(this.start, this.length, this.source);
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    @Override
+    public String toString() {
+        return "Piece{" +
+                "start=" + start +
+                ", length=" + length +
+                ", source='" + source + '\'' +
+                '}';
+    }
 }
