@@ -1,13 +1,33 @@
 package com.dog2657.richtext;
 
-import java.lang.reflect.Array;
+import com.dog2657.richtext.DataStructure.Piece;
+
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Model {
 
+    private static Model instance;
+    private Viewer viewer;
+
+    private String fileLocation;
+
     private String data_original = "";
     private String data_add = "";
-    private DataPiece[] data_pieces = new DataPiece[5];
+    private LinkedList<Piece> data_pieces = new LinkedList<>();
+
+    private int cursor = 0;
+
+
+
+
+    public static Model getInstance() {
+        if(instance == null)
+            instance = new Model();
+        return instance;
+    }
+
+    private Model(){ }
 
 
     public String get_data_original_text() {
@@ -18,57 +38,57 @@ public class Model {
         return data_add;
     }
 
-    public DataPiece[] get_data_pieces() {
+    public  LinkedList<Piece> get_data_pieces() {
         return data_pieces;
     }
 
 
+    public void clear_data(){
+        this.data_original = "";
+        this.data_add = "";
+        this.data_pieces = new LinkedList<>();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //TODO: Add dynamic buffer size
-    private int bufferSize = 1024;
-
-    private String fileLocation;
-    private char[] buffer = new char[bufferSize];
-
-    private int cursor = 0;
-
-    private static Model instance;
-    private Viewer viewer;
-
-    public static Model getInstance() {
-        if(instance == null)
-            instance = new Model();
-        return instance;
+        this.cursor = 0;
+        this.fileLocation = null;
+        this.viewer = null;
     }
 
-    private Model(){ }
+    public void set_data_original(String data_original){
+        this.data_original = data_original;
+        this.data_pieces.add(new Piece(0, data_original.length(), "original"));
+    }
+
+    public String get_text_output(){
+        String output = "";
+        for (Piece piece:this.data_pieces) {
+
+            if(piece.getSource() == "original"){
+                output += this.data_original.substring(piece.getStart(), piece.getStart() + piece.getLength());
+            }else if(piece.getSource() == "add"){
+                output += this.data_add.substring(piece.getStart(), piece.getStart() + piece.getLength());
+            }
+        }
+        return output;
+    }
+
+    public void add_text(String text){
+        if(cursor <= 0){
+            this.data_pieces.add(new Piece(cursor, data_original.length(), "add"));
+        }
+
+    }
+
+    public void delete_text(){
+
+    }
 
     public void setBuffer(char[] buffer){
-        try{
+        /*try{
             data_original = new String(buffer);
             data_add = "";
 
             Arrays.fill(data_pieces, null);
-            data_pieces[0] =new DataPiece(0, data_original.length(), "original");
+            data_pieces[0] =new Piece(0, data_original.length(), "original");
 
             viewer.update();
         }catch (Exception e) {
@@ -77,13 +97,9 @@ public class Model {
 
 
         //TODO: Remove
-        this.buffer = buffer;
+        this.buffer = buffer;*/
     }
 
-    public void addToBuffer(char character){
-        this.buffer[++cursor] = character;
-        viewer.update();
-    }
 
     public String getFileLocation() {
         return fileLocation;
@@ -99,11 +115,16 @@ public class Model {
 
     public void setCursor(int cursor) {
         this.cursor = cursor;
-        this.viewer.update();
+        update();
     }
 
     public char[] getBuffer(){
-        return buffer;
+        return null;
+    }
+
+    private void update(){
+        if(this.viewer != null)
+            this.viewer.update();
     }
 
     public void setViewer(Viewer viewer){

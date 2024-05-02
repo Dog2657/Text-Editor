@@ -1,14 +1,12 @@
-package com.dog2657.richtext;
+package com.dog2657.richtext.DataStructure;
 
-public class DataPiece {
+public class Piece {
     private int start;
     private int length;
-    private String source ;
+    private String source;
 
-    public DataPiece(int start, int length, String source) throws Exception {
-        if(source != "add" && source != "original")
-            throw new Exception("Invalid source to create a data piece from");
 
+    public Piece(int start, int length, String source){
         this.start = start;
         this.length = length;
         this.source = source;
