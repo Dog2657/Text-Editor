@@ -1,6 +1,7 @@
 package com.dog2657.richtext;
 
 import com.dog2657.richtext.DataStructure.Piece;
+import com.dog2657.richtext.DataStructure.Sources;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -57,7 +58,7 @@ public class Model {
 
     public void set_data_original(String data_original){
         this.data_original = data_original;
-        this.data_pieces.add(new Piece(0, data_original.length(), "original"));
+        this.data_pieces.add(new Piece(0, data_original.length(), Sources.original));
         this.file_total_length = data_original.length();
     }
 
@@ -65,45 +66,51 @@ public class Model {
         String output = "";
         for (Piece piece:this.data_pieces) {
 
-            if(piece.getSource() == "original"){
+            if(piece.getSource() == Sources.original){
                 output += this.data_original.substring(piece.getStart(), piece.getStart() + piece.getLength());
-            }else if(piece.getSource() == "add"){
+            }else if(piece.getSource() == Sources.add){
                 output += this.data_add.substring(piece.getStart(), piece.getStart() + piece.getLength());
             }
         }
         return output;
     }
 
+
     public void add_text(String text){
-        int start = this.data_add.length();
-        this.data_add += text;
+        if(cursor <= 0 || cursor >= file_total_length){
+            int start = this.data_add.length();
+            this.data_add += text;
 
-        //Middle Piece
-        Piece data = new Piece(start, text.length(), "add");
+            Piece data = new Piece(start, text.length(), Sources.add);
 
-        if(cursor <= 0)
-            this.data_pieces.add(0, data);
+            if(cursor <= 0)
+                this.data_pieces.add(0, data);
 
-        else if(cursor >= file_total_length)
-            this.data_pieces.add(data);
+            else if(cursor >= file_total_length)
+                this.data_pieces.add(data);
 
-        else{
+        }else{
+            int start = this.data_add.length();
+            this.data_add += text;
+
             Piece start_piece = this.data_pieces.get(0);
             int N = 0;
             int position = 0;
 
             for (int i=0; i<this.data_pieces.size(); i++) {
+                if(N + start_piece.getLength() >= cursor)
+                    break;
+
                 start_piece = this.data_pieces.get(i);
                 N += start_piece.getLength();
                 position = i;
-
-                if(N + start_piece.getLength() >= cursor)
-                    break;
             }
 
-            int n = N - cursor ;
+            int n = cursor - N;
 
-            Piece end_piece = start_piece.clone();
+            Piece data = new Piece(start, text.length(), Sources.add);
+
+            Piece end_piece = start_piece.split(n);
             end_piece.setLength(n);
             end_piece.setStart(end_piece.getStart() + n);
 
