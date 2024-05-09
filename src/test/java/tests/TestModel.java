@@ -16,19 +16,46 @@ public class TestModel {
     @Test
     void add_start() {
         Model.getInstance().setCursor(0);
-        Model.getInstance().add_text("Cat");
+        Model.getInstance().add_text("Cat ");
 
-        String exp = "CatLorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
+        String exp = "Cat Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
         assertEquals(exp, Model.getInstance().get_text_output());
     }
 
     @Test
-    void add_middle() {
+    void add_start_and_end() {
+        Model.getInstance().setCursor(0);
+        Model.getInstance().add_text("Cat ");
+
+        Model.getInstance().setCursor(60);
+        Model.getInstance().add_text(" Dog");
+
+        String exp = "Cat Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dog";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+    }
+
+    @Test
+    void add_middle_single() {
         Model.getInstance().setCursor(28);
         Model.getInstance().add_text("Cat ");
 
         String exp = "Lorem ipsum dolor sit amet, Cat consectetur adipiscing elit.";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+    }
+
+    @Test
+    void add_middle_several() {
+        Model.getInstance().setCursor(28);
+        Model.getInstance().add_text("Cat ");
+
+        Model.getInstance().setCursor(32);
+        Model.getInstance().add_text("Dog ");
+
+        String exp = "Lorem ipsum dolor sit amet, Cat Dog consectetur adipiscing elit.";
 
         assertEquals(exp, Model.getInstance().get_text_output());
     }

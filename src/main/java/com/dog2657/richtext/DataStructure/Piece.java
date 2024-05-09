@@ -32,7 +32,7 @@ public class Piece {
     /**
      * Modify current piece while returning the other split piece
      *
-     * @param point is the end of the original piece, point + 1 is the start of the new piece
+     * @param point is the end of the original piece & the start of the new piece
      * @return
      */
     public Piece split(int point){
@@ -40,7 +40,7 @@ public class Piece {
 
         assert 0<= point && point <= this.length : "Point is outside of this piece";
 
-        instance.start = point + 1;
+        instance.start = point;
         instance.length -= point;
 
         this.length = point;

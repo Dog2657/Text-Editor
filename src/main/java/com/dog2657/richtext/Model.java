@@ -64,9 +64,14 @@ public class Model {
 
     public String get_text_output(){
         String output = "";
+
+
         for (Piece piece:this.data_pieces) {
 
             if(piece.getSource() == Sources.original){
+
+                int test = piece.getStart() + piece.getLength();
+
                 output += this.data_original.substring(piece.getStart(), piece.getStart() + piece.getLength());
             }else if(piece.getSource() == Sources.add){
                 output += this.data_add.substring(piece.getStart(), piece.getStart() + piece.getLength());
@@ -77,7 +82,61 @@ public class Model {
 
 
     public void add_text(String text){
-        if(cursor <= 0 || cursor >= file_total_length){
+        //The location in all pieces
+        int absolute_location = 0;
+
+        Piece selected = null;
+        int selected_index = 0;
+
+        for (int i=0; i<this.data_pieces.size(); i++){
+            selected = this.data_pieces.get(i);
+            if(absolute_location + selected.getLength() >= cursor) {
+                selected_index = i;
+                break;
+            }
+
+            absolute_location += selected.getLength();
+        }
+
+        //The position within the selected data Piece
+        int relative_location = cursor - absolute_location;
+
+        //3 cases
+
+
+
+        if(relative_location <= 0){//At the start of the piece
+
+            int start = this.data_add.length();
+            this.data_add += text;
+            Piece data = new Piece(start, text.length(), Sources.add);
+            this.data_pieces.add(selected_index, data);
+            System.out.println("Add at start");
+
+        } else if (relative_location >= selected.getLength()) {
+
+            int start = this.data_add.length();
+            this.data_add += text;
+            Piece data = new Piece(start, text.length(), Sources.add);
+            this.data_pieces.add(selected_index+1, data);
+            System.out.println("Add to end");
+
+        }else{
+            System.out.println("Add inside");
+
+            int start = this.data_add.length();
+            this.data_add += text;
+            Piece data = new Piece(start, text.length(), Sources.add);
+
+            Piece ending_piece = selected.split(relative_location);
+            this.data_pieces.add(selected_index + 1, data);
+            this.data_pieces.add(selected_index + 2, ending_piece);
+        }
+
+        //At the end of the piece
+        //Inside the piece
+
+        /*if(cursor <= 0 || cursor >= file_total_length){
             int start = this.data_add.length();
             this.data_add += text;
 
@@ -118,7 +177,7 @@ public class Model {
 
             this.data_pieces.add(position+1, data);
             this.data_pieces.add(position+2, end_piece);
-        }
+        }*/
 
         file_total_length += text.length();
     }
