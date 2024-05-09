@@ -35,30 +35,7 @@ public class Viewer extends Canvas {
         gc.setFont(font);
         gc.setFill(Color.WHITESMOKE);
 
-
-        String original = Model.getInstance().get_data_original_text();
-        String added = Model.getInstance().get_data_added_text();
-        LinkedList<Piece> pieces = Model.getInstance().get_data_pieces();
-
-
-
-        /*for (int i=0; i<pieces.length; i++) {
-            Piece piece = pieces[i];
-            if(piece == null)
-                break;
-
-            String text = "";
-
-            if(piece.getSource() == "original")
-                text = original.substring(piece.getStart(), piece.getStart() + piece.getLength());
-            else if(piece.getSource() == "add")
-                text  = added.substring(piece.getStart(), piece.getStart() + piece.getLength());
-
-
-            //TODO: Move text position according to end of last text
-            gc.fillText(text, 0, 15);
-
-        }*/
+        gc.fillText(Model.getInstance().get_text_output(), 0, 15);
 
         gc.setStroke(Color.RED);
 
@@ -67,7 +44,7 @@ public class Viewer extends Canvas {
     }
 
     public void update(){
-        render();
+        this.render();
     }
 
 

@@ -20,9 +20,8 @@ public abstract class Controller {
     }
 
     public static void addCharacter(String character){
-        //TODO: Add character check
         Model.getInstance().add_text(character);
-
+        Model.getInstance().moveCursor(1);
     }
 
     public static void moveCursorLeft(int moves){

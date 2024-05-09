@@ -122,6 +122,7 @@ public class Model {
         }
 
         file_total_length += text.length();
+        update();
     }
 
 
