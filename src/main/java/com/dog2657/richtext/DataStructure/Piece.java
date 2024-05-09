@@ -1,12 +1,13 @@
 package com.dog2657.richtext.DataStructure;
 
+
 public class Piece {
     private int start;
     private int length;
-    private String source;
+    private Sources source;
 
 
-    public Piece(int start, int length, String source){
+    public Piece(int start, int length, Sources source){
         this.start = start;
         this.length = length;
         this.source = source;
@@ -20,12 +21,31 @@ public class Piece {
         return length;
     }
 
-    public String getSource() {
+    public Sources getSource() {
         return source;
     }
 
     public Piece clone(){
         return new Piece(this.start, this.length, this.source);
+    }
+
+    /**
+     * Modify current piece while returning the other split piece
+     *
+     * @param point is the end of the original piece, point + 1 is the start of the new piece
+     * @return
+     */
+    public Piece split(int point){
+        Piece instance = this.clone();
+
+        assert 0<= point && point <= this.length : "Point is outside of this piece";
+
+        instance.start = point + 1;
+        instance.length -= point;
+
+        this.length = point;
+
+        return instance;
     }
 
     public void setStart(int start) {
