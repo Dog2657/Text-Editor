@@ -145,8 +145,12 @@ public class Model {
      */
     public void moveCursor(int moves){
         cursor += moves;
+
         if(cursor < 0)
             cursor = 0;
+        else if (cursor > file_total_length)
+            cursor = file_total_length;
+
         update();
     }
 
