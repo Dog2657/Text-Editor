@@ -7,6 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TestModel {
+    void simulateKeyPresses(String word){
+        Model instance = Model.getInstance();
+
+        for(int i=0; i<word.length(); i++) {
+            String character = word.substring(i, i + 1);
+            instance.add_text(character);
+            instance.moveCursor(1);
+        }
+    }
+
     @BeforeEach
     void setUp() {
         Model.getInstance().clear_data();
@@ -67,5 +77,60 @@ public class TestModel {
         String exp = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cat";
 
         assertEquals(exp, Model.getInstance().get_text_output());
+    }
+
+
+    @Test
+    void add_start_simulated() {
+        Model.getInstance().setCursor(0);
+        simulateKeyPresses("Cat ");
+
+        String exp = "Cat Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+        assertEquals(2, Model.getInstance().get_data_pieces().size());
+    }
+
+    @Test
+    void add_middle_single_simulated() {
+        Model.getInstance().setCursor(28);
+        simulateKeyPresses("Cat ");
+
+        String exp = "Lorem ipsum dolor sit amet, Cat consectetur adipiscing elit.";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+        assertEquals(3, Model.getInstance().get_data_pieces().size());
+    }
+
+    @Test
+    void add_middle_simulated() {
+        Model.getInstance().setCursor(28);
+        simulateKeyPresses("Cat ");
+
+        Model.getInstance().setCursor(32);
+        simulateKeyPresses("Dog ");
+
+        String exp = "Lorem ipsum dolor sit amet, Cat Dog consectetur adipiscing elit.";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+        assertEquals(3, Model.getInstance().get_data_pieces().size());
+
+
+    }
+
+    @Test
+    void add_middle_several_simulated() {
+        Model.getInstance().setCursor(12);
+        simulateKeyPresses("Cat ");
+
+        Model.getInstance().setCursor(32);
+        simulateKeyPresses("Dog are the best ");
+
+        Model m = Model.getInstance();
+
+        String exp = "Lorem ipsum Cat dolor sit amet, Dog are the best consectetur adipiscing elit.";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+        assertEquals(5, Model.getInstance().get_data_pieces().size());
     }
 }

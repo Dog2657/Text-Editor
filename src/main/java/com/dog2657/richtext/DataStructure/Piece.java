@@ -38,10 +38,10 @@ public class Piece {
     public Piece split(int point){
         Piece instance = this.clone();
 
-        assert 0<= point && point <= this.length : "Point is outside of this piece";
+        assert 0 <= point && point <= this.length : "Point is outside of this piece";
 
-        instance.start = point;
         instance.length -= point;
+        instance.start = this.start + point;
 
         this.length = point;
 

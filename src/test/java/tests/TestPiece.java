@@ -24,6 +24,21 @@ public class TestPiece {
     }
 
     @Test
+    void double_split(){
+        Piece act1 = new Piece(0, 30, Sources.original);
+        Piece act2 = act1.split(10);
+        Piece act3 = act2.split(10);
+
+        assertEquals(act2.getLength(), 10);
+        assertEquals(act2.getStart(), 10);
+        assertEquals(act2.getSource(), Sources.original);
+
+        assertEquals(act3.getLength(), 10);
+        assertEquals(act3.getStart(), 20);
+        assertEquals(act3.getSource(), Sources.original);
+    }
+
+    @Test
     void split_out_of_bounds_positive() {
         Piece act1 = new Piece(0, 20, Sources.original);
 

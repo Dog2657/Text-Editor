@@ -103,17 +103,19 @@ public class Model {
         //The new data Piece
         Piece data = new Piece(start, text.length(), Sources.add);
 
-        if(relative_location <= 0){
-
+        if(relative_location <= 0) {//Is before selected piece
             this.data_pieces.add(selected_index, data);
-            System.out.println("Add at start");
 
-        } else if (relative_location >= selected.getLength()) {
+        }else if (relative_location >= selected.getLength()) {//Is after selected piece
 
-            this.data_pieces.add(selected_index+1, data);
-            System.out.println("Add to end");
+            //Checks if it can be combined with selected when source is add (For key presses)
+            if(selected.getSource() == Sources.add && (this.data_add.length() - selected.getLength() - 1) == selected.getStart()){
+                selected.setLength(selected.getLength() + 1);
+            }else{
+                this.data_pieces.add(selected_index + 1, data);
+            }
 
-        }else{
+        }else{//Is inside selected piece
             Piece ending_piece = selected.split(relative_location);
             this.data_pieces.add(selected_index + 1, data);
             this.data_pieces.add(selected_index + 2, ending_piece);
@@ -160,6 +162,17 @@ public class Model {
 
     public void setCursor(int cursor) {
         this.cursor = cursor;
+        update();
+    }
+
+    /**
+     * Moves the cursor left or right
+     * @param moves the cursor takes (negative numbers move to the left & positive numbers move to the right)
+     */
+    public void moveCursor(int moves){
+        cursor += moves;
+        if(cursor < 0)
+            cursor = 0;
         update();
     }
 
