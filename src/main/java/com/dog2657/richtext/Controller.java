@@ -5,9 +5,9 @@ import java.io.IOException;
 public abstract class Controller {
     public static void openFile(String path){
         try {
-            char[] fileResult = FileManager.readFile(path);
+            String fileResult = FileManager.readFile(path);
 
-            Model.getInstance().setBuffer(fileResult);
+            Model.getInstance().load_file(fileResult);
             Model.getInstance().setFileLocation(path);
         } catch (IOException e) {
             //TODO: Add user modal message

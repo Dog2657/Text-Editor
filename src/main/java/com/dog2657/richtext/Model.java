@@ -21,9 +21,6 @@ public class Model {
 
     private int cursor = 0;
 
-
-
-
     public static Model getInstance() {
         if(instance == null)
             instance = new Model();
@@ -31,15 +28,6 @@ public class Model {
     }
 
     private Model(){ }
-
-
-    public String get_data_original_text() {
-        return data_original;
-    }
-
-    public String get_data_added_text() {
-        return data_add;
-    }
 
     public  LinkedList<Piece> get_data_pieces() {
         return data_pieces;
@@ -56,10 +44,14 @@ public class Model {
         this.viewer = null;
     }
 
-    public void set_data_original(String data_original){
+    public void load_file(String data_original){
         this.data_original = data_original;
+        this.add_text("");
+        this.data_pieces.clear();
         this.data_pieces.add(new Piece(0, data_original.length(), Sources.original));
         this.file_total_length = data_original.length();
+        this.cursor = 0;
+        update();
     }
 
     public String get_text_output(){
@@ -129,25 +121,6 @@ public class Model {
     public void delete_text(){
 
     }
-
-    public void setBuffer(char[] buffer){
-        /*try{
-            data_original = new String(buffer);
-            data_add = "";
-
-            Arrays.fill(data_pieces, null);
-            data_pieces[0] =new Piece(0, data_original.length(), "original");
-
-            viewer.update();
-        }catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        //TODO: Remove
-        this.buffer = buffer;*/
-    }
-
 
     public String getFileLocation() {
         return fileLocation;
