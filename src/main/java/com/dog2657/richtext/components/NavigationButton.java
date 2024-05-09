@@ -10,6 +10,7 @@ public class NavigationButton extends Button {
     public NavigationButton(String name){
         super(name);
 
+        this.setFocusTraversable(false);
         this.setStyle("-fx-border-width: 0px; -fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand !important; -fx-padding: 0px;");
     }
 }

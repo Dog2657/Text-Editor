@@ -36,6 +36,7 @@ public class App extends Application {
                     Controller.moveCursorLeft(1);
                 }
                 case RIGHT -> Controller.moveCursorRight(1);
+                case SPACE -> Controller.addCharacter(' ');
                 default -> {
                     Controller.addCharacter( e.getText() );
                 }
