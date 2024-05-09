@@ -1,11 +1,13 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataStructure.Piece;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.LinkedList;
 
 
 public class Viewer extends Canvas {
@@ -32,7 +34,31 @@ public class Viewer extends Canvas {
 
         gc.setFont(font);
         gc.setFill(Color.WHITESMOKE);
-        gc.fillText(new String(Model.getInstance().getBuffer()), 0, 15);
+
+
+        String original = Model.getInstance().get_data_original_text();
+        String added = Model.getInstance().get_data_added_text();
+        LinkedList<Piece> pieces = Model.getInstance().get_data_pieces();
+
+
+
+        /*for (int i=0; i<pieces.length; i++) {
+            Piece piece = pieces[i];
+            if(piece == null)
+                break;
+
+            String text = "";
+
+            if(piece.getSource() == "original")
+                text = original.substring(piece.getStart(), piece.getStart() + piece.getLength());
+            else if(piece.getSource() == "add")
+                text  = added.substring(piece.getStart(), piece.getStart() + piece.getLength());
+
+
+            //TODO: Move text position according to end of last text
+            gc.fillText(text, 0, 15);
+
+        }*/
 
         gc.setStroke(Color.RED);
 

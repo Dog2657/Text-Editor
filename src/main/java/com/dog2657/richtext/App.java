@@ -27,6 +27,9 @@ public class App extends Application {
 
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
+
+            System.out.printf(String.valueOf(e.getCode()));
+
             switch (e.getCode()){
                 case LEFT -> {
                     System.out.println("Left");
@@ -35,11 +38,7 @@ public class App extends Application {
                 case RIGHT -> Controller.moveCursorRight(1);
                 case SPACE -> Controller.addCharacter(' ');
                 default -> {
-                    try {
-                        Controller.addCharacter(e.getText().toCharArray()[0]);
-                    }catch (Exception error){
-                        System.out.println("\n\nInvalid character: " + e.getText() + "\n\n");
-                    }
+                    Controller.addCharacter( e.getText() );
                 }
             }
         });

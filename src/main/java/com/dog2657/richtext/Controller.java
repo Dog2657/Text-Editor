@@ -19,9 +19,9 @@ public abstract class Controller {
         FileManager.saveFile(path, Model.getInstance().getBuffer());
     }
 
-    public static void addCharacter(char character){
+    public static void addCharacter(String character){
         //TODO: Add character check
-        Model.getInstance().addToBuffer(character);
+        Model.getInstance().add_text(character);
 
     }
 
