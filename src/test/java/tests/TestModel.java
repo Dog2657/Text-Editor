@@ -18,7 +18,6 @@ public class TestModel {
         Model.getInstance().setCursor(0);
         Model.getInstance().add_text("Cat ");
 
-
         String exp = "Cat Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
         assertEquals(exp, Model.getInstance().get_text_output());
