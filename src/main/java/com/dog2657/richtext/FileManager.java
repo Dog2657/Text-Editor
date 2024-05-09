@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 public abstract class FileManager {
 
-    public static char[] readFile(String pathString) throws IOException {
+    public static String readFile(String pathString) throws IOException {
         Path path = Path.of(pathString);
 
         long size = Files.size(path);
@@ -16,15 +16,14 @@ public abstract class FileManager {
         return readFile(pathString, (int) size);
     }
 
-    public static char[] readFile(String path, int bufferSize) throws IOException {
+    public static String readFile(String path, int bufferSize) throws IOException {
         char[] buffer = new char[bufferSize];
 
         FileReader reader = new FileReader(path);
         reader.read(buffer, 0, bufferSize);
         reader.close();
 
-
-        return  buffer;
+        return String.valueOf(buffer);
     }
 
     public static void saveFile(String path, char[] buffer) {

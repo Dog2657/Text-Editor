@@ -16,9 +16,6 @@ public class App extends Application {
         viewer = new Viewer(1350, 700);
         Model.getInstance().setViewer(viewer);
 
-
-
-
         navigation = new Navigation(stage);
 
         BorderPane border = new BorderPane();
@@ -39,7 +36,6 @@ public class App extends Application {
                 }
             }
         });
-
 
         //Stops window being resized
         stage.setResizable(false);
