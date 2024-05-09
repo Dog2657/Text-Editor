@@ -25,14 +25,10 @@ public abstract class Controller {
     }
 
     public static void moveCursorLeft(int moves){
-        int cursor = Model.getInstance().getCursor();
-        cursor -= moves;
-        Model.getInstance().setCursor(cursor);
+        Model.getInstance().moveCursor(moves * -1);
     }
 
     public static void moveCursorRight(int moves){
-        int cursor = Model.getInstance().getCursor();
-        cursor += moves;
-        Model.getInstance().setCursor(cursor);
+        Model.getInstance().moveCursor(moves);
     }
 }
