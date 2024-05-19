@@ -118,8 +118,40 @@ public class Model {
     }
 
 
-    public void delete_text(){
+    public void delete_text(boolean forwards){
+        //The location in all pieces
+        int absolute_location = 0;
 
+        Piece selected = null;
+        int selected_index = 0;
+
+        for (int i=0; i<this.data_pieces.size(); i++){
+            selected = this.data_pieces.get(i);
+            if(absolute_location + selected.getLength() >= cursor) {
+                selected_index = i;
+                break;
+            }
+
+            absolute_location += selected.getLength();
+        }
+
+        //The position within the selected data Piece
+        int relative_location = cursor - absolute_location;
+
+        final int moves = 1;
+
+        if(relative_location <= 0) {
+            selected.setStart(selected.getStart() + moves);
+        }else if (relative_location >= selected.getLength()) {//Is after selected piece
+            selected.setLength(selected.getLength() - moves);
+        }else{//Is inside selected piece
+            Piece ending_piece = selected.split(relative_location);
+            selected.setLength(selected.getLength() - moves);
+            data_pieces.add(selected_index + 1, ending_piece);
+        }
+
+        file_total_length -= moves;
+        update();
     }
 
     public String getFileLocation() {

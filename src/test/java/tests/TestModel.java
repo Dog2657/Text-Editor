@@ -20,7 +20,7 @@ public class TestModel {
     @BeforeEach
     void setUp() {
         Model.getInstance().clear_data();
-        Model.getInstance().set_data_original("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        Model.getInstance().load_file("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
     }
 
     @Test
@@ -132,5 +132,26 @@ public class TestModel {
 
         assertEquals(exp, Model.getInstance().get_text_output());
         assertEquals(5, Model.getInstance().get_data_pieces().size());
+    }
+
+    @Test
+    void delete_start_backwards(){
+        Model.getInstance().setCursor(6);
+        Model.getInstance().delete_text(false);
+
+        String exp = "Loremipsum dolor sit amet, consectetur adipiscing elit.";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+    }
+
+    @Test
+    void delete_start_forwards(){
+        Model.getInstance().setCursor(0);
+        Model.getInstance().delete_text(true);
+
+        String exp = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
+        assertEquals(exp, Model.getInstance().get_text_output());
+        assertEquals(1, Model.getInstance().get_data_pieces().size());
     }
 }

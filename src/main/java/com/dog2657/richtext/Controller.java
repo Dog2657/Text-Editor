@@ -31,4 +31,10 @@ public abstract class Controller {
     public static void moveCursorRight(int moves){
         Model.getInstance().moveCursor(moves);
     }
+
+    public static void delete(boolean forwards) {
+        Model.getInstance().delete_text(forwards);
+
+        Model.getInstance().moveCursor(-1);
+    }
 }

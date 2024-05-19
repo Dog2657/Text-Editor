@@ -25,11 +25,12 @@ public class App extends Application {
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()){
-                case LEFT -> {
-                    System.out.println("Left");
-                    Controller.moveCursorLeft(1);
-                }
+                case LEFT -> Controller.moveCursorLeft(1);
                 case RIGHT -> Controller.moveCursorRight(1);
+
+                case BACK_SPACE -> Controller.delete(false);
+                case DELETE -> Controller.delete(true);
+
                 default -> {
                     if(e.getText().length() == 1)
                         Controller.addCharacter( e.getText() );
