@@ -1,8 +1,11 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataStructure.LineBreaks;
 import com.dog2657.richtext.DataStructure.Piece;
 import com.dog2657.richtext.DataStructure.Sources;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -45,12 +48,28 @@ public class Model {
     }
 
     public void load_file(String data_original){
+        //Multithreading break checks
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                LineBreaks.getInstance().parse(data_original);
+            }
+        });
+        t.start();
+
         this.data_original = data_original;
         this.add_text("");
         this.data_pieces.clear();
         this.data_pieces.add(new Piece(0, data_original.length(), Sources.original));
         this.file_total_length = data_original.length();
         this.cursor = 0;
+
+        try{//Waits for line breaks to finish
+            t.join();
+        }catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+
         update();
     }
 

@@ -1,5 +1,6 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataStructure.LineBreaks;
 import com.dog2657.richtext.DataStructure.Piece;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 
@@ -40,7 +42,7 @@ public class Viewer extends Canvas {
         gc.setStroke(Color.RED);
 
         Location cursorLoc = getCursorLocation();
-        gc.strokeLine(cursorLoc.x, 0, cursorLoc.x, fontSize);
+        gc.strokeLine(cursorLoc.x, cursorLoc.y, cursorLoc.x, cursorLoc.y + fontSize);
     }
 
     public void update(){
@@ -55,9 +57,16 @@ public class Viewer extends Canvas {
     }
 
     public Location getCursorLocation(){
+        int line = LineBreaks.getInstance().getLine(Model.getInstance().getCursor());
+        int loc = Model.getInstance().getCursor();
         double fontWidth = getFontWidth(font);
 
-        return new Location(fontWidth * Model.getInstance().getCursor(), 0);
+        if(line > 0){
+            int lastBreak = LineBreaks.getInstance().getBreaks().get(line -1);
+            loc -= lastBreak + 1;
+        }
+
+        return new Location(fontWidth * loc, line * fontSize);
     }
 
 
