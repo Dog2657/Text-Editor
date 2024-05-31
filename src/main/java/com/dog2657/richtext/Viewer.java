@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+
 
 public class Viewer extends Canvas {
     int fontSize;
@@ -37,15 +39,18 @@ public class Viewer extends Canvas {
         gc.setFill(Color.WHITESMOKE);
 
         String text = Model.getInstance().get_text_output();
-        String[] lines = text.split("\n");
+        ArrayList<Integer> lines = LineBreaks.getInstance().getBreaks();
 
         double lineGap = fontSize + this.lineGap;
 
-        for (int i=0; i<lines.length; i++) {
-            gc.fillText(lines[i], 0, (i * lineGap) + 15);
+        for (int i=0; i<lines.size(); i++) {
+            int start = (i != 0)? lines.get(i-1) + 1:0;
+            int end = lines.get(i);
+            String line = text.substring(start, end);
+
+            gc.fillText(line, 0, (i * lineGap) + 15);
         }
 
-        //gc.fillText(text, 0, 15);
 
         gc.setStroke(Color.RED);
 
