@@ -57,8 +57,8 @@ public class Model {
         });
         t.start();
 
+        this.reset();
         this.data_original = data_original;
-        this.add_text("");
         this.data_pieces.clear();
         this.data_pieces.add(new Piece(0, data_original.length(), Sources.original));
         this.file_total_length = data_original.length();
@@ -71,6 +71,13 @@ public class Model {
         }
 
         update();
+    }
+
+    private void reset(){
+        this.data_add = "";
+        this.data_pieces = new LinkedList<>();
+        this.file_total_length = 0;
+        this.data_original = "";
     }
 
     public String get_text_output(){
