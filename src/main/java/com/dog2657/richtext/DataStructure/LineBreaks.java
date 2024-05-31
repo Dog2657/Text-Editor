@@ -45,9 +45,10 @@ public class LineBreaks {
         return position - (lastBreak + 1);
     }
 
-    static public int getRelativeLocation(int position){
+    static public int getRelativeLocation(int position) {
         int line = LineBreaks.getInstance().getLine(position);
         return getRelativeLocation(position, line);
+    }
 
     public ArrayList<Integer> getBreaks() {
         return breaks;
