@@ -50,6 +50,18 @@ public class LineBreaks {
         return getRelativeLocation(position, line);
     }
 
+    /**
+     * Shifts all line breaks after position by moves
+     */
+    public void shiftPoints(int position, int moves){
+        int line = getLine(position);
+        for (int i=line; i<breaks.size(); i++) {
+            int instance = breaks.get(i);
+            instance += moves;
+            breaks.set(i, instance);
+        }
+    }
+
     public ArrayList<Integer> getBreaks() {
         return breaks;
     }

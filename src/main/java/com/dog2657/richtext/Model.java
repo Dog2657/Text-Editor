@@ -139,6 +139,7 @@ public class Model {
             this.data_pieces.add(selected_index + 2, ending_piece);
         }
 
+        LineBreaks.getInstance().shiftPoints(cursor, 1);
         file_total_length += text.length();
         update();
     }
