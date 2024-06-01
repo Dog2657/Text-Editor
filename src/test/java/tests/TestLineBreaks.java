@@ -11,14 +11,17 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestLineBreaks {
-    @Test
-    void parse_text_long(){
+    @BeforeEach
+    void setup(){
         LineBreaks.getInstance().parse("Aperture Science.\n" +
                 "We do what we must\n" +
-                "Because we can.\n" +
-                "For the good of all of us.\n" +
-                "Except the ones who are dead.");
+                        "Because we can.\n" +
+                        "For the good of all of us.\n" +
+                        "Except the ones who are dead.");
+    }
 
+    @Test
+    void parse_text_long(){
         ArrayList<Integer> exp = new ArrayList<>();
         exp.add(17);
         exp.add(36);
@@ -30,12 +33,22 @@ public class TestLineBreaks {
 
     @Test
     void get_cursor_line(){
-        LineBreaks.getInstance().parse("Aperture Science.\n" +
-                "We do what we must\n" +
-                "Because we can.\n" +
-                "For the good of all of us.\n" +
-                "Except the ones who are dead.");
-
         assertEquals(1, LineBreaks.getInstance().getLine(26));
+    }
+
+    @Test
+    void shift_points(){
+        int cursor = 36;
+        LineBreaks instance = LineBreaks.getInstance();
+
+        instance.shiftPoints(cursor, 1);
+
+        ArrayList<Integer> exp = new ArrayList<>();
+        exp.add(17);
+        exp.add(37);
+        exp.add(53);
+        exp.add(80);
+
+        assertEquals(exp, instance.getBreaks());
     }
 }
