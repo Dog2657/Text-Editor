@@ -25,8 +25,10 @@ public class App extends Application {
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()){
-                case LEFT -> Controller.moveCursorLeft(1);
-                case RIGHT -> Controller.moveCursorRight(1);
+                case LEFT -> Controller.moveCursorLeft();
+                case RIGHT -> Controller.moveCursorRight();
+                case UP -> Controller.moveCursorUp();
+                case DOWN -> Controller.moveCursorDown();
 
                 case BACK_SPACE -> Controller.delete(false);
                 case DELETE -> Controller.delete(true);
