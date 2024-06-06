@@ -206,23 +206,13 @@ public class Model {
             this.data_pieces.add(selected_index + 2, ending_piece);
         }
 
-        //LineBreaks.getInstance().shiftPoints(cursor, 1);
+
+
+        this.shiftPoints(1);
         file_total_length += text.length();
         update();
     }
 
-
-    /**
-     * Shifts all line breaks after position by moves
-     */
-    public void shiftPoints(int moves){
-        int line = getLine(cursor);
-        for (int i=line; i<breaks.size(); i++) {
-            int instance = breaks.get(i);
-            instance += moves;
-            breaks.set(i, instance);
-        }
-    }
 
     public void delete_text(boolean forwards){
         //The location in all pieces
@@ -257,8 +247,34 @@ public class Model {
             data_pieces.add(selected_index + 1, ending_piece);
         }
 
-        Model.getInstance().shiftPoints(-1);
+        this.shiftPoints(-1);
         file_total_length -= moves;
+        update();
+    }
+
+    /**
+     * Shifts all line breaks after position by moves
+     */
+    public void shiftPoints(int moves){
+        int line = getLine(cursor);
+        for (int i=line; i<breaks.size(); i++) {
+            int instance = breaks.get(i);
+            instance += moves;
+            breaks.set(i, instance);
+        }
+    }
+
+    public void newLine(){
+        int currentLine = get_cursor_line();
+        this.add_text("\n");
+        this.breaks.add(currentLine, cursor);
+        update();
+    }
+
+    public void deleteLine(){
+        int currentLine = get_cursor_line();
+        this.delete_text(false);
+        this.breaks.remove(currentLine -1);
         update();
     }
 

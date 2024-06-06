@@ -24,6 +24,11 @@ public abstract class Controller {
         Model.getInstance().moveCursor(1);
     }
 
+    public static void makeNewLine(){
+        Model.getInstance().newLine();
+        Model.getInstance().moveCursor(1);
+    }
+
     public static void moveCursorLeft(int moves){
         Model.getInstance().moveCursor(moves * -1);
     }
@@ -33,7 +38,10 @@ public abstract class Controller {
     }
 
     public static void delete(boolean forwards) {
-        Model.getInstance().delete_text(forwards);
+        if(Model.getInstance().get_cursor_relative_location() == 0)
+            Model.getInstance().deleteLine();
+        else
+            Model.getInstance().delete_text(forwards);
 
         Model.getInstance().moveCursor(-1);
     }
