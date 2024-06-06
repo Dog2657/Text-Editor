@@ -1,5 +1,6 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataStructure.FontDetails;
 import com.dog2657.richtext.DataStructure.Piece;
 import com.dog2657.richtext.DataStructure.Sources;
 
@@ -10,6 +11,7 @@ public class Model {
     private static Model instance;
     private Viewer viewer;
 
+    final private FontDetails font = new FontDetails(15);
     private String fileLocation;
 
     private String data_original = "";
@@ -319,6 +321,10 @@ public class Model {
     private void update(){
         if(this.viewer != null)
             this.viewer.update();
+    }
+
+    public FontDetails getFont() {
+        return font;
     }
 
     public void setViewer(Viewer viewer){
