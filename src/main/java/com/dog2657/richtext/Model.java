@@ -234,6 +234,8 @@ public class Model {
         //The position within the selected data Piece
         int relative_location = cursor - absolute_location;
 
+        if(selected_index <= 0 && relative_location <= 0)
+            return;
 
         final int moves = 1;
 

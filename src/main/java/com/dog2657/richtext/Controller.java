@@ -38,7 +38,11 @@ public abstract class Controller {
     }
 
     public static void delete(boolean forwards) {
-        if(Model.getInstance().get_cursor_relative_location() == 0)
+        int relativeLoc = Model.getInstance().get_cursor_relative_location();
+        if(Model.getInstance().get_cursor_line() <= 0 && relativeLoc <= 0)
+            return;
+
+        if(relativeLoc == 0)
             Model.getInstance().deleteLine();
         else
             Model.getInstance().delete_text(forwards);
