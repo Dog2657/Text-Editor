@@ -1,6 +1,5 @@
 package com.dog2657.richtext.DataStructure;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DataStructure {
@@ -93,6 +92,8 @@ public class DataStructure {
     public int getLength() {
         return length;
     }
+
+    public int getPiecesSize(){ return this.pieces.size(); }
 
 
 
