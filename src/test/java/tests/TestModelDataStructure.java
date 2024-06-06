@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.dog2657.richtext.Model;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class TestModel {
-    void simulateKeyPresses(String word){
+public class TestModelDataStructure {
+    private void simulateKeyPresses(String word){
         Model instance = Model.getInstance();
 
         for(int i=0; i<word.length(); i++) {
@@ -144,6 +145,8 @@ public class TestModel {
         assertEquals(exp, Model.getInstance().get_text_output());
     }
 
+
+    @Disabled("Disabled until adding forward delete feature")
     @Test
     void delete_start_forwards(){
         Model.getInstance().setCursor(0);

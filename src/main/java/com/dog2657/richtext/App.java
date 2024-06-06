@@ -31,6 +31,8 @@ public class App extends Application {
                 case BACK_SPACE -> Controller.delete(false);
                 case DELETE -> Controller.delete(true);
 
+                case ENTER -> Controller.makeNewLine();
+
                 default -> {
                     if(e.getText().length() == 1)
                         Controller.addCharacter( e.getText() );
