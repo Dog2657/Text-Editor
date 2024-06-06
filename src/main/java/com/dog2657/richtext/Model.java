@@ -1,5 +1,6 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataStructure.DataStructure;
 import com.dog2657.richtext.DataStructure.FontDetails;
 import com.dog2657.richtext.DataStructure.Piece;
 import com.dog2657.richtext.DataStructure.Sources;
@@ -14,11 +15,8 @@ public class Model {
     final private FontDetails font = new FontDetails(15);
     private String fileLocation;
 
-    private String data_original = "";
-    private String data_add = "";
+    private DataStructure data = new DataStructure("");
 
-    private LinkedList<Piece> data_pieces = new LinkedList<>();
-    private int file_total_length = 0;
 
     private ArrayList<Integer> breaks = new ArrayList<>();
 
@@ -33,15 +31,11 @@ public class Model {
     private Model(){ }
 
     public  LinkedList<Piece> get_data_pieces() {
-        return data_pieces;
+        return this.data.getPieces();
     }
 
 
     public void clear_data(){
-        this.data_original = "";
-        this.data_add = "";
-        this.data_pieces = new LinkedList<>();
-
         this.cursor = 0;
         this.fileLocation = null;
         this.viewer = null;
@@ -64,11 +58,7 @@ public class Model {
         });
         t.start();
 
-        this.reset();
-        this.data_original = data_original;
-        this.data_pieces.clear();
-        this.data_pieces.add(new Piece(0, data_original.length(), Sources.original));
-        this.file_total_length = data_original.length();
+        this.data = new DataStructure(data_original);
         this.cursor = 0;
 
         try{//Waits for line breaks to finish
@@ -80,24 +70,10 @@ public class Model {
         update();
     }
 
-    private void reset(){
-        this.data_add = "";
-        this.data_pieces = new LinkedList<>();
-        this.file_total_length = 0;
-        this.data_original = "";
-    }
+
 
     public String get_text_output(){
-        String output = "";
-
-        for (Piece piece:this.data_pieces) {
-            if(piece.getSource() == Sources.original){
-                output += this.data_original.substring(piece.getStart(), piece.getStart() + piece.getLength());
-            }else if(piece.getSource() == Sources.add){
-                output += this.data_add.substring(piece.getStart(), piece.getStart() + piece.getLength());
-            }
-        }
-        return output;
+        return this.data.getOutput();
     }
 
     public int get_cursor_line(){
@@ -141,7 +117,7 @@ public class Model {
     public interface processLineCallback { void process(int line, String content); }
 
     public void process_each_line_output(processLineCallback callback){
-        String text = Model.getInstance().get_text_output();
+        String text = this.data.getOutput();
         ArrayList<Integer> lines = this.breaks;
 
         if(lines.size() <= 0) {
@@ -160,7 +136,7 @@ public class Model {
             callback.process(i, content);
         }
 
-        content = text.substring(lines.get(lines.size() -1) +1, this.file_total_length);
+        content = text.substring(lines.get(lines.size() -1) +1, this.data.getLength());
         callback.process(lines.size() -1, content);
     }
 
@@ -176,104 +152,24 @@ public class Model {
     }
 
     public void add_text(String text){
-        //The location in all pieces
-        int absolute_location = 0;
-
-        Piece selected = null;
-        int selected_index = 0;
-
-        for (int i=0; i<this.data_pieces.size(); i++){
-            selected = this.data_pieces.get(i);
-            if(absolute_location + selected.getLength() >= cursor) {
-                selected_index = i;
-                break;
-            }
-
-            absolute_location += selected.getLength();
-        }
-
-        //The position within the selected data Piece
-        int relative_location = cursor - absolute_location;
-
-        //The start of the new text in add source
-        int start = this.data_add.length();
-        this.data_add += text;
-
-        //The new data Piece
-        Piece data = new Piece(start, text.length(), Sources.add);
-
-        if(relative_location <= 0) {//Is before selected piece
-            this.data_pieces.add(selected_index, data);
-
-        }else if (relative_location >= selected.getLength()) {//Is after selected piece
-
-            //Checks if it can be combined with selected when source is add (For key presses)
-            if(selected.getSource() == Sources.add && (this.data_add.length() - selected.getLength() - 1) == selected.getStart()){
-                selected.setLength(selected.getLength() + 1);
-            }else{
-                this.data_pieces.add(selected_index + 1, data);
-            }
-
-        }else{//Is inside selected piece
-            Piece ending_piece = selected.split(relative_location);
-            this.data_pieces.add(selected_index + 1, data);
-            this.data_pieces.add(selected_index + 2, ending_piece);
-        }
-
-
-
+        this.data.add_text(this.cursor, text);
         this.shiftPoints(1);
-        file_total_length += text.length();
         update();
     }
 
 
     public void delete_text(boolean forwards){
-        //The location in all pieces
-        int absolute_location = 0;
-
-        Piece selected = null;
-        int selected_index = 0;
-
-        for (int i=0; i<this.data_pieces.size(); i++){
-            selected = this.data_pieces.get(i);
-            if(absolute_location + selected.getLength() >= cursor) {
-                selected_index = i;
-                break;
-            }
-
-            absolute_location += selected.getLength();
-        }
-
-        //The position within the selected data Piece
-        int relative_location = cursor - absolute_location;
-
-        if(selected_index <= 0 && relative_location <= 0)
-            return;
-
-        final int moves = 1;
-
-        if(relative_location <= 0) {
-            selected.setStart(selected.getStart() + moves);
-        }else if (relative_location >= selected.getLength()) {//Is after selected piece
-            selected.setLength(selected.getLength() - moves);
-        }else{//Is inside selected piece
-            Piece ending_piece = selected.split(relative_location);
-            selected.setLength(selected.getLength() - moves);
-            data_pieces.add(selected_index + 1, ending_piece);
-        }
-
+        this.data.delete_text(cursor);
         this.shiftPoints(-1);
-        file_total_length -= moves;
         update();
     }
 
     public int getLineLength(int line){
         if(breaks.size() == 0)
-            return file_total_length;
+            return this.data.getLength();
 
         if(line == breaks.size())
-            return file_total_length - (breaks.get(breaks.size() -1) + 1);
+            return this.data.getLength() - (breaks.get(breaks.size() -1) + 1);
 
         if(line == 0)
             return breaks.get(0);
@@ -336,8 +232,8 @@ public class Model {
 
         if(cursor < 0)
             cursor = 0;
-        else if (cursor > file_total_length)
-            cursor = file_total_length;
+        else if (cursor > this.data.getLength())
+            cursor = this.data.getLength();
 
         update();
     }
@@ -359,7 +255,4 @@ public class Model {
         this.viewer = viewer;
     }
 
-    public int getFileLength() {
-        return file_total_length;
-    }
 }
