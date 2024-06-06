@@ -42,7 +42,7 @@ public class TestModelLineBreaks {
         ArrayList<String> act = this.get_lines();
 
         ArrayList<String> exp = new ArrayList<>();
-        exp.add("Aperture Science.");
+        exp.add("Aperture Science. ");
         exp.add("We do what we must");
         exp.add("Because we can.");
         exp.add("For the good of all of us.");
