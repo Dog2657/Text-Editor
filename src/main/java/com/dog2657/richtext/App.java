@@ -1,7 +1,9 @@
 package com.dog2657.richtext;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -21,6 +23,13 @@ public class App extends Application {
         BorderPane border = new BorderPane();
         border.setCenter(viewer);
         border.setTop(navigation);
+
+        viewer.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Controller.moveCursor(event.getX(), event.getY());
+            }
+        });
 
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {

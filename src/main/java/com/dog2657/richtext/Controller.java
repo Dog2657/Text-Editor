@@ -69,6 +69,26 @@ public abstract class Controller {
             Model.getInstance().setCursor(breaks.get(currentLine) + currentRelativeLoc + 1);
     }
 
+    public static void moveCursor(double x, double y){
+
+        int pos = 0;
+        int line = 0;
+
+        if(Model.getInstance().getBreaks().size() > 0) {
+            line = (int) Math.floor(y / Model.getInstance().getFont().getLineSpacing());
+            if (line > 0)
+                pos += Model.getInstance().getBreaks().get(line - 1) + 1;
+        }
+
+
+        int character = (int)Math.round(x / Model.getInstance().getFont().getCharacterWidth());
+        if(character > Model.getInstance().getLineLength(line))
+            return;
+        pos += character;
+
+        Model.getInstance().setCursor(pos);
+    }
+
 
     public static void delete(boolean forwards) {
         int relativeLoc = Model.getInstance().get_cursor_relative_location();

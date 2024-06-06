@@ -144,8 +144,10 @@ public class Model {
         String text = Model.getInstance().get_text_output();
         ArrayList<Integer> lines = this.breaks;
 
-        if(lines.size() <= 0)
+        if(lines.size() <= 0) {
+            callback.process(0, text);
             return;
+        }
 
         String content = text.substring(0, lines.get(0));
         callback.process(0, content);
@@ -162,6 +164,16 @@ public class Model {
         callback.process(lines.size() -1, content);
     }
 
+    public static void moveCursor(double x, double y){
+        final int lineGap = 1;
+        final int fontSize = 15;
+
+        int line = (int)Math.floor(y / (fontSize + lineGap));
+        int character = (int)Math.round(x / Model.getInstance().getFont().getCharacterWidth());
+
+
+        System.out.println(String.format("X: %f | Y: %f", x, y));
+    }
 
     public void add_text(String text){
         //The location in all pieces
@@ -256,6 +268,22 @@ public class Model {
         update();
     }
 
+    public int getLineLength(int line){
+        if(breaks.size() == 0)
+            return file_total_length;
+
+        if(line == breaks.size())
+            return file_total_length - (breaks.get(breaks.size() -1) + 1);
+
+        if(line == 0)
+            return breaks.get(0);
+
+        int start = breaks.get(line -1);
+        int end = breaks.get(line);
+
+        return end - start -1;
+    }
+
     /**
      * Shifts all line breaks after position by moves
      */
@@ -329,5 +357,9 @@ public class Model {
 
     public void setViewer(Viewer viewer){
         this.viewer = viewer;
+    }
+
+    public int getFileLength() {
+        return file_total_length;
     }
 }
