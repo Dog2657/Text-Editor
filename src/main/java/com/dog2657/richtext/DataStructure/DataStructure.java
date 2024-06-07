@@ -137,7 +137,4 @@ public class DataStructure {
 
         return new piece_processing_info(absolute_location, relative_location, selected_index, selected);
     }
-
-
-
 }

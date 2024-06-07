@@ -1,4 +1,4 @@
-package com.dog2657.richtext.DataStructure;
+package com.dog2657.richtext.DataClasses;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;

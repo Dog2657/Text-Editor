@@ -1,9 +1,9 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataClasses.BreakPoints;
+import com.dog2657.richtext.DataClasses.FontDetails;
 import com.dog2657.richtext.DataStructure.DataStructure;
-import com.dog2657.richtext.DataStructure.FontDetails;
 import com.dog2657.richtext.DataStructure.Piece;
-import com.dog2657.richtext.DataStructure.Sources;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,9 +16,9 @@ public class Model {
     private String fileLocation;
 
     private DataStructure data = new DataStructure("");
+    private BreakPoints points = new BreakPoints();
 
 
-    private ArrayList<Integer> breaks = new ArrayList<>();
 
     private int cursor = 0;
 
@@ -35,27 +35,9 @@ public class Model {
     }
 
 
-    public void clear_data(){
-        this.cursor = 0;
-        this.fileLocation = null;
-        this.viewer = null;
-    }
-
     public void load_file(String data_original){
         //Multithreading break checks
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                breaks.clear();
-                char[] content = data_original.toCharArray();
-
-                for (int i=0; i<content.length; i++) {
-                    if((int)content[i] != 10)
-                        continue;
-                    breaks.add(i);
-                }
-            }
-        });
+        Thread t = new Thread(() -> points.parse(data_original));
         t.start();
 
         this.data = new DataStructure(data_original);
@@ -77,39 +59,18 @@ public class Model {
     }
 
     public int get_cursor_line(){
-        for (int i=0; i<breaks.size(); i++) {
-            if(breaks.get(i) < cursor)
-                continue;
-            return i;
-        }
-        return 0;
+        return this.points.getPositionLine(cursor);
     }
 
 
     public int get_cursor_relative_location(){
-        int line = get_cursor_line();
-        if(line == 0)
-            return cursor;
-
-        int abs = breaks.get(line -1);
-        return cursor - abs - 1;
+        return points.getRelativeLineLocation(cursor);
     }
 
 
-    /*
-     * Gets the line that a position is on
-     */
-    public int getLine(int position){
-        for (int i=0; i<breaks.size(); i++) {
-            if(breaks.get(i) < position)
-                continue;
-            return i;
-        }
-        return 0;
-    }
 
     public ArrayList<Integer> getBreaks() {
-        return breaks;
+        return points.getPoints();
     }
 
 
@@ -118,9 +79,9 @@ public class Model {
 
     public void process_each_line_output(processLineCallback callback){
         String text = this.data.getOutput();
-        ArrayList<Integer> lines = this.breaks;
+        ArrayList<Integer> lines = this.points.getPoints();
 
-        if(lines.size() <= 0) {
+        if(lines.size() == 0) {
             callback.process(0, text);
             return;
         }
@@ -140,17 +101,6 @@ public class Model {
         callback.process(lines.size() -1, content);
     }
 
-    public static void moveCursor(double x, double y){
-        final int lineGap = 1;
-        final int fontSize = 15;
-
-        int line = (int)Math.floor(y / (fontSize + lineGap));
-        int character = (int)Math.round(x / Model.getInstance().getFont().getCharacterWidth());
-
-
-        System.out.println(String.format("X: %f | Y: %f", x, y));
-    }
-
     public void add_text(String text){
         this.data.add_text(this.cursor, text);
         this.shiftPoints(1);
@@ -165,17 +115,17 @@ public class Model {
     }
 
     public int getLineLength(int line){
-        if(breaks.size() == 0)
+        if(this.points.size() == 0)
             return this.data.getLength();
 
-        if(line == breaks.size())
-            return this.data.getLength() - (breaks.get(breaks.size() -1) + 1);
+        if(line == this.points.size())
+            return this.data.getLength() - (points.getPoint(this.points.size() -1) + 1);
 
         if(line == 0)
-            return breaks.get(0);
+            return points.getPoint(0);
 
-        int start = breaks.get(line -1);
-        int end = breaks.get(line);
+        int start = points.getPoint(line -1);
+        int end = points.getPoint(line);
 
         return end - start -1;
     }
@@ -184,25 +134,20 @@ public class Model {
      * Shifts all line breaks after position by moves
      */
     public void shiftPoints(int moves){
-        int line = getLine(cursor);
-        for (int i=line; i<breaks.size(); i++) {
-            int instance = breaks.get(i);
-            instance += moves;
-            breaks.set(i, instance);
-        }
+        this.points.shiftPoints(cursor, moves);
     }
 
     public void newLine(){
-        int currentLine = get_cursor_line();
+        int currentLine = this.points.getPositionLine(cursor);
         this.add_text("\n");
-        this.breaks.add(currentLine, cursor);
+        this.points.newPoint(currentLine, cursor);
         update();
     }
 
     public void deleteLine(){
         int currentLine = get_cursor_line();
         this.delete_text(false);
-        this.breaks.remove(currentLine -1);
+        this.points.deletePoint(currentLine -1);
         update();
     }
 
