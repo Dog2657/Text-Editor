@@ -38,21 +38,21 @@ public abstract class Controller {
         Model.getInstance().moveCursor(1);
     }
 
-    public static void moveCursorUp(){
-        ArrayList<Integer> breaks = Model.getInstance().getBreaks();
+    public static void moveCursorUp(){//TODO: fix
         int currentLine = Model.getInstance().get_cursor_line();
         if(currentLine <= 0)
             return;
 
-        int currentRelativeLoc = Model.getInstance().get_cursor_relative_location();
-        int previousLineLength = (currentLine <= 1)? breaks.get(currentLine -1):breaks.get(currentLine -1) - breaks.get(currentLine -2);
+        int newLocation = Model.getInstance().getAbsolutePositionFromRelativeLine(0, currentLine - 1);
 
-        if(currentRelativeLoc >= previousLineLength)
-            Model.getInstance().setCursor( breaks.get(currentLine - 1) );
+        int lineLength = Model.getInstance().getLineLength(currentLine - 1);
+        if(lineLength >= Model.getInstance().getCursorRelativeLocation())
+            newLocation += Model.getInstance().getCursorRelativeLocation();
         else
-            Model.getInstance().setCursor(
-                    (currentLine <= 1)? currentRelativeLoc : breaks.get(currentLine -2) - currentRelativeLoc
-            );
+            newLocation += lineLength;
+
+
+        Model.getInstance().setCursor(newLocation);
     }
 
     public static void moveCursorDown(){
@@ -61,7 +61,7 @@ public abstract class Controller {
         if((breaks.size() -1) <= currentLine)
             return;
 
-        int currentRelativeLoc = Model.getInstance().get_cursor_relative_location();
+        int currentRelativeLoc = Model.getInstance().getCursorRelativeLocation();
 
         if(currentRelativeLoc >= (breaks.get(currentLine + 1) - breaks.get(currentLine)))
             Model.getInstance().setCursor( breaks.get(currentLine + 1) );
@@ -70,7 +70,6 @@ public abstract class Controller {
     }
 
     public static void moveCursor(double x, double y){
-
         int pos = 0;
         int line = 0;
 
@@ -91,7 +90,7 @@ public abstract class Controller {
 
 
     public static void delete(boolean forwards) {
-        int relativeLoc = Model.getInstance().get_cursor_relative_location();
+        int relativeLoc = Model.getInstance().getCursorRelativeLocation();
         if(Model.getInstance().get_cursor_line() <= 0 && relativeLoc <= 0)
             return;
 

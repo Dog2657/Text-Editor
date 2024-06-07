@@ -7,4 +7,6 @@ module com.dog2657.richtext {
     exports com.dog2657.richtext;
     exports com.dog2657.richtext.DataStructure;
     opens com.dog2657.richtext.DataStructure to javafx.fxml;
+    exports com.dog2657.richtext.DataClasses;
+    opens com.dog2657.richtext.DataClasses to javafx.fxml;
 }

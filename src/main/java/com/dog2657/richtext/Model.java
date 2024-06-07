@@ -1,8 +1,9 @@
 package com.dog2657.richtext;
 
-import com.dog2657.richtext.DataStructure.FontDetails;
+import com.dog2657.richtext.DataClasses.BreakPoints;
+import com.dog2657.richtext.DataClasses.FontDetails;
+import com.dog2657.richtext.DataStructure.DataStructure;
 import com.dog2657.richtext.DataStructure.Piece;
-import com.dog2657.richtext.DataStructure.Sources;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -14,15 +15,11 @@ public class Model {
     final private FontDetails font = new FontDetails(15);
     private String fileLocation;
 
-    private String data_original = "";
-    private String data_add = "";
-
-    private LinkedList<Piece> data_pieces = new LinkedList<>();
-    private int file_total_length = 0;
-
-    private ArrayList<Integer> breaks = new ArrayList<>();
+    private DataStructure data = new DataStructure("");
+    private BreakPoints breakpoints = new BreakPoints();
 
     private int cursor = 0;
+
 
     public static Model getInstance() {
         if(instance == null)
@@ -32,43 +29,18 @@ public class Model {
 
     private Model(){ }
 
-    public  LinkedList<Piece> get_data_pieces() {
-        return data_pieces;
+    public LinkedList<Piece> get_data_pieces() {
+        return this.data.getPieces();
     }
 
-
-    public void clear_data(){
-        this.data_original = "";
-        this.data_add = "";
-        this.data_pieces = new LinkedList<>();
-
-        this.cursor = 0;
-        this.fileLocation = null;
-        this.viewer = null;
-    }
 
     public void load_file(String data_original){
         //Multithreading break checks
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                breaks.clear();
-                char[] content = data_original.toCharArray();
-
-                for (int i=0; i<content.length; i++) {
-                    if((int)content[i] != 10)
-                        continue;
-                    breaks.add(i);
-                }
-            }
-        });
+        Thread t = new Thread(() -> breakpoints.parse(data_original));
         t.start();
 
-        this.reset();
-        this.data_original = data_original;
-        this.data_pieces.clear();
-        this.data_pieces.add(new Piece(0, data_original.length(), Sources.original));
-        this.file_total_length = data_original.length();
+        this.data = new DataStructure(data_original);
+        breakpoints = new BreakPoints();
         this.cursor = 0;
 
         try{//Waits for line breaks to finish
@@ -80,71 +52,37 @@ public class Model {
         update();
     }
 
-    private void reset(){
-        this.data_add = "";
-        this.data_pieces = new LinkedList<>();
-        this.file_total_length = 0;
-        this.data_original = "";
-    }
 
     public String get_text_output(){
-        String output = "";
-
-        for (Piece piece:this.data_pieces) {
-            if(piece.getSource() == Sources.original){
-                output += this.data_original.substring(piece.getStart(), piece.getStart() + piece.getLength());
-            }else if(piece.getSource() == Sources.add){
-                output += this.data_add.substring(piece.getStart(), piece.getStart() + piece.getLength());
-            }
-        }
-        return output;
+        return this.data.getOutput();
     }
 
     public int get_cursor_line(){
-        for (int i=0; i<breaks.size(); i++) {
-            if(breaks.get(i) < cursor)
-                continue;
-            return i;
-        }
-        return 0;
+        return this.breakpoints.getPositionLine(cursor);
     }
 
 
-    public int get_cursor_relative_location(){
-        int line = get_cursor_line();
-        if(line == 0)
-            return cursor;
-
-        int abs = breaks.get(line -1);
-        return cursor - abs - 1;
+    public int getCursorRelativeLocation(){
+        int line = breakpoints.getPositionLine(cursor);
+        return breakpoints.getRelativeLineLocation(cursor, line);
     }
 
-
-    /*
-     * Gets the line that a position is on
-     */
-    public int getLine(int position){
-        for (int i=0; i<breaks.size(); i++) {
-            if(breaks.get(i) < position)
-                continue;
-            return i;
-        }
-        return 0;
+    public int getAbsolutePositionFromRelativeLine(int relativePoint, int line){
+        return breakpoints.getAbsolutePositionFromRelativeLine(relativePoint, line);
     }
 
     public ArrayList<Integer> getBreaks() {
-        return breaks;
+        return breakpoints.getPoints();
     }
-
 
 
     public interface processLineCallback { void process(int line, String content); }
 
     public void process_each_line_output(processLineCallback callback){
-        String text = Model.getInstance().get_text_output();
-        ArrayList<Integer> lines = this.breaks;
+        String text = this.data.getOutput();
+        ArrayList<Integer> lines = this.breakpoints.getPoints();
 
-        if(lines.size() <= 0) {
+        if(lines.size() == 0) {
             callback.process(0, text);
             return;
         }
@@ -160,153 +98,44 @@ public class Model {
             callback.process(i, content);
         }
 
-        content = text.substring(lines.get(lines.size() -1) +1, this.file_total_length);
+        content = text.substring(lines.get(lines.size() -1) +1, this.data.getLength());
         callback.process(lines.size() -1, content);
     }
 
-    public static void moveCursor(double x, double y){
-        final int lineGap = 1;
-        final int fontSize = 15;
-
-        int line = (int)Math.floor(y / (fontSize + lineGap));
-        int character = (int)Math.round(x / Model.getInstance().getFont().getCharacterWidth());
-
-
-        System.out.println(String.format("X: %f | Y: %f", x, y));
-    }
-
     public void add_text(String text){
-        //The location in all pieces
-        int absolute_location = 0;
-
-        Piece selected = null;
-        int selected_index = 0;
-
-        for (int i=0; i<this.data_pieces.size(); i++){
-            selected = this.data_pieces.get(i);
-            if(absolute_location + selected.getLength() >= cursor) {
-                selected_index = i;
-                break;
-            }
-
-            absolute_location += selected.getLength();
-        }
-
-        //The position within the selected data Piece
-        int relative_location = cursor - absolute_location;
-
-        //The start of the new text in add source
-        int start = this.data_add.length();
-        this.data_add += text;
-
-        //The new data Piece
-        Piece data = new Piece(start, text.length(), Sources.add);
-
-        if(relative_location <= 0) {//Is before selected piece
-            this.data_pieces.add(selected_index, data);
-
-        }else if (relative_location >= selected.getLength()) {//Is after selected piece
-
-            //Checks if it can be combined with selected when source is add (For key presses)
-            if(selected.getSource() == Sources.add && (this.data_add.length() - selected.getLength() - 1) == selected.getStart()){
-                selected.setLength(selected.getLength() + 1);
-            }else{
-                this.data_pieces.add(selected_index + 1, data);
-            }
-
-        }else{//Is inside selected piece
-            Piece ending_piece = selected.split(relative_location);
-            this.data_pieces.add(selected_index + 1, data);
-            this.data_pieces.add(selected_index + 2, ending_piece);
-        }
-
-
-
+        this.data.add_text(this.cursor, text);
         this.shiftPoints(1);
-        file_total_length += text.length();
         update();
     }
 
-
     public void delete_text(boolean forwards){
-        //The location in all pieces
-        int absolute_location = 0;
-
-        Piece selected = null;
-        int selected_index = 0;
-
-        for (int i=0; i<this.data_pieces.size(); i++){
-            selected = this.data_pieces.get(i);
-            if(absolute_location + selected.getLength() >= cursor) {
-                selected_index = i;
-                break;
-            }
-
-            absolute_location += selected.getLength();
-        }
-
-        //The position within the selected data Piece
-        int relative_location = cursor - absolute_location;
-
-        if(selected_index <= 0 && relative_location <= 0)
-            return;
-
-        final int moves = 1;
-
-        if(relative_location <= 0) {
-            selected.setStart(selected.getStart() + moves);
-        }else if (relative_location >= selected.getLength()) {//Is after selected piece
-            selected.setLength(selected.getLength() - moves);
-        }else{//Is inside selected piece
-            Piece ending_piece = selected.split(relative_location);
-            selected.setLength(selected.getLength() - moves);
-            data_pieces.add(selected_index + 1, ending_piece);
-        }
-
+        this.data.delete_text(cursor);
         this.shiftPoints(-1);
-        file_total_length -= moves;
         update();
     }
 
     public int getLineLength(int line){
-        if(breaks.size() == 0)
-            return file_total_length;
-
-        if(line == breaks.size())
-            return file_total_length - (breaks.get(breaks.size() -1) + 1);
-
-        if(line == 0)
-            return breaks.get(0);
-
-        int start = breaks.get(line -1);
-        int end = breaks.get(line);
-
-        return end - start -1;
+        return breakpoints.getLineLength(line, data.getLength());
     }
 
     /**
      * Shifts all line breaks after position by moves
      */
     public void shiftPoints(int moves){
-        int line = getLine(cursor);
-        for (int i=line; i<breaks.size(); i++) {
-            int instance = breaks.get(i);
-            instance += moves;
-            breaks.set(i, instance);
-        }
+        this.breakpoints.shiftPoints(cursor, moves);
     }
 
     public void newLine(){
-        int currentLine = get_cursor_line();
+        int currentLine = this.breakpoints.getPositionLine(cursor);
         this.add_text("\n");
-        this.breaks.add(currentLine, cursor);
+        this.breakpoints.newPoint(currentLine, cursor);
         update();
     }
 
     public void deleteLine(){
         int currentLine = get_cursor_line();
         this.delete_text(false);
-        this.breaks.remove(currentLine -1);
+        this.breakpoints.deletePoint(currentLine -1);
         update();
     }
 
@@ -336,8 +165,8 @@ public class Model {
 
         if(cursor < 0)
             cursor = 0;
-        else if (cursor > file_total_length)
-            cursor = file_total_length;
+        else if (cursor > this.data.getLength())
+            cursor = this.data.getLength();
 
         update();
     }
@@ -357,9 +186,5 @@ public class Model {
 
     public void setViewer(Viewer viewer){
         this.viewer = viewer;
-    }
-
-    public int getFileLength() {
-        return file_total_length;
     }
 }
