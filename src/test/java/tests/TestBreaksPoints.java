@@ -194,4 +194,28 @@ public class TestBreaksPoints {
         assertEquals(5, instance.getRelativeLineLocation(abs, line));
     }
 
+    @Test
+    void convert_relative_into_absolute_position_middle(){
+        BreakPoints instance = new BreakPoints("Aperture Science.\nWe do what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
+
+        int abs = "Aperture Science.\nWe do what we must\nBecause we can.\nFor the good of".length();
+
+        int line = instance.getPositionLine(abs);
+        int relativePos = instance.getRelativeLineLocation(abs, line);
+
+        assertEquals(abs, instance.getAbsolutePositionFromRelativeLine(relativePos, line));
+    }
+
+    @Test
+    void convert_relative_into_absolute_position_start(){
+        BreakPoints instance = new BreakPoints("Aperture Science.\nWe do what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
+
+        int abs = "Aperture Science.".length();
+
+        int line = instance.getPositionLine(abs);
+        int relativePos = instance.getRelativeLineLocation(abs, line);
+
+        assertEquals(abs, instance.getAbsolutePositionFromRelativeLine(relativePos, line));
+    }
+
 }

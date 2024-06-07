@@ -39,23 +39,23 @@ public abstract class Controller {
     }
 
     public static void moveCursorUp(){//TODO: fix
-        ArrayList<Integer> breaks = Model.getInstance().getBreaks();
         int currentLine = Model.getInstance().get_cursor_line();
         if(currentLine <= 0)
             return;
 
-        int currentRelativeLoc = Model.getInstance().getCursorRelativeLocation();
-        int previousLineLength = (currentLine <= 1)? breaks.get(currentLine -1):breaks.get(currentLine -1) - breaks.get(currentLine -2);
+        int newLocation = Model.getInstance().getAbsolutePositionFromRelativeLine(0, currentLine - 1);
 
-        if(currentRelativeLoc >= previousLineLength)
-            Model.getInstance().setCursor( breaks.get(currentLine - 1) );
+        int lineLength = Model.getInstance().getLineLength(currentLine - 1);
+        if(lineLength >= Model.getInstance().getCursorRelativeLocation())
+            newLocation += Model.getInstance().getCursorRelativeLocation();
         else
-            Model.getInstance().setCursor(
-                    (currentLine <= 1)? currentRelativeLoc : breaks.get(currentLine -2) - currentRelativeLoc
-            );
+            newLocation += lineLength;
+
+
+        Model.getInstance().setCursor(newLocation);
     }
 
-    public static void moveCursorDown(){//TODO: fix
+    public static void moveCursorDown(){
         ArrayList<Integer> breaks = Model.getInstance().getBreaks();
         int currentLine = Model.getInstance().get_cursor_line();
         if((breaks.size() -1) <= currentLine)
@@ -70,7 +70,6 @@ public abstract class Controller {
     }
 
     public static void moveCursor(double x, double y){
-
         int pos = 0;
         int line = 0;
 

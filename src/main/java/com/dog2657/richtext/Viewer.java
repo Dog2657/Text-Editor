@@ -42,15 +42,11 @@ public class Viewer extends Canvas {
 
     public Location getCursorLocation(){
         int line = Model.getInstance().get_cursor_line();
-        int loc = Model.getInstance().getCursor();
-
-
         double fontWidth = Model.getInstance().getFont().getCharacterWidth();
 
-        if(line > 0){
+        int loc = Model.getInstance().getCursor();
+        if(line > 0)
             loc = Model.getInstance().getCursorRelativeLocation();
-            System.out.println(loc);
-        }
 
         return new Location(fontWidth * loc, line * Model.getInstance().getFont().getLineSpacing());
     }

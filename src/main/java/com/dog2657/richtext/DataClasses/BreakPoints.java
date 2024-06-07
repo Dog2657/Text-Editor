@@ -42,7 +42,7 @@ public class BreakPoints {
      *  Gets the relative position from the start of the line
      *
      * @example Line starts at 50 & point is at 55 will return 5
-     * @param position is the abslute location in the file like a cursor
+     * @param position is the absolute location in the file like a cursor
      * @return the position relative to the line
      */
     public int getRelativeLineLocation(int position, int line){
@@ -51,6 +51,21 @@ public class BreakPoints {
 
         int lineStartPosition = this.points.get(line - 1);
         return position - lineStartPosition -1;
+    }
+
+    /**
+     *  Gets the absolute position from a relative line position
+     *  It reverses {getRelativeLineLocation()}
+     *
+     * @param relativePosition is the relative line location
+     * @return the absolute position
+     */
+    public int getAbsolutePositionFromRelativeLine(int relativePosition, int line){
+        if(line == 0)
+            return relativePosition;
+
+        int lineStartPosition = this.points.get(line - 1);
+        return lineStartPosition + relativePosition + 1;
     }
 
 

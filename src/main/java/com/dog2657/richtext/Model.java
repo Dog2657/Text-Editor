@@ -70,6 +70,9 @@ public class Model {
         return breakpoints.getRelativeLineLocation(cursor, line);
     }
 
+    public int getAbsolutePositionFromRelativeLine(int relativePoint, int line){
+        return breakpoints.getAbsolutePositionFromRelativeLine(relativePoint, line);
+    }
 
 
     public ArrayList<Integer> getBreaks() {
