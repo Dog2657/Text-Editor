@@ -29,7 +29,7 @@ public class Model {
 
     private Model(){ }
 
-    public  LinkedList<Piece> get_data_pieces() {
+    public LinkedList<Piece> get_data_pieces() {
         return this.data.getPieces();
     }
 
@@ -49,11 +49,8 @@ public class Model {
             throw new RuntimeException(e);
         }
 
-
-
         update();
     }
-
 
 
     public String get_text_output(){
@@ -74,11 +71,9 @@ public class Model {
         return breakpoints.getAbsolutePositionFromRelativeLine(relativePoint, line);
     }
 
-
     public ArrayList<Integer> getBreaks() {
         return breakpoints.getPoints();
     }
-
 
 
     public interface processLineCallback { void process(int line, String content); }
@@ -112,7 +107,6 @@ public class Model {
         this.shiftPoints(1);
         update();
     }
-
 
     public void delete_text(boolean forwards){
         this.data.delete_text(cursor);
@@ -193,5 +187,4 @@ public class Model {
     public void setViewer(Viewer viewer){
         this.viewer = viewer;
     }
-
 }
