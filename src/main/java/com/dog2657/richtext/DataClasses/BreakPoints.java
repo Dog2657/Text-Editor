@@ -27,12 +27,15 @@ public class BreakPoints {
      * @return {int} line which the position is on.
      */
     public int getPositionLine(int position){
+        if(points.size() == 0)
+            return  0;
+
         for (int i=0; i<points.size(); i++) {
             if(points.get(i) < position)
                 continue;
             return i;
         }
-        return 0;
+        return points.size();
     }
 
     /**
@@ -43,20 +46,13 @@ public class BreakPoints {
      * @return the position relative to the line
      */
     public int getRelativeLineLocation(int position, int line){
-        return position - this.points.get(line);
+        if(line == 0)
+            return position;
+
+        int lineStartPosition = this.points.get(line - 1);
+        return position - lineStartPosition -1;
     }
 
-    /**
-     *  Gets the relative position from the start of the line
-     *
-     * @example Line starts at 50 & point is at 55 will return 5
-     * @param position is the abslute location in the file like a cursor
-     * @return the position relative to the line
-     */
-    public int getRelativeLineLocation(int position){
-        int line = getPositionLine(position);
-        return getRelativeLineLocation(position, line);
-    }
 
     /**
      * Shifts all line breaks after position by moves

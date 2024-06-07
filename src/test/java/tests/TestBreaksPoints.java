@@ -24,6 +24,15 @@ public class TestBreaksPoints {
         assertEquals(exp, instance.getPoints());
     }
 
+    @Test
+    void parse_text_short(){
+        BreakPoints instance = new BreakPoints("Aperture Science.");
+
+        ArrayList<Integer> exp = new ArrayList<>();
+
+        assertEquals(exp, instance.getPoints());
+    }
+
 
     @Test
     void subtract_shift_line() {
@@ -154,4 +163,35 @@ public class TestBreaksPoints {
 
         assertEquals(26, instance.getLineLength(4, 109));
     }
+
+    @Test
+    void covert_position_to_line_start(){
+         BreakPoints instance = new BreakPoints("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
+         assertEquals(0, instance.getPositionLine("Aperture Science".length()));
+    }
+
+    @Test
+    void covert_position_to_line_end(){
+        BreakPoints instance = new BreakPoints("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
+        assertEquals(5, instance.getPositionLine("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the".length()));
+    }
+
+    @Test
+    void covert_position_to_line_middle(){
+        BreakPoints instance = new BreakPoints("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
+        assertEquals(3, instance.getPositionLine("Aperture Science.\nW\nedo what we must\nBecause we".length()));
+    }
+
+
+
+    @Test
+    void convert_absolute_position_into_relative(){
+        BreakPoints instance = new BreakPoints("Aperture Science.Wedo what we mustBecause we can.\nAperture Science.\nWe do what we mustBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
+
+        int abs = 55;
+        int line = 1;
+
+        assertEquals(5, instance.getRelativeLineLocation(abs, line));
+    }
+
 }

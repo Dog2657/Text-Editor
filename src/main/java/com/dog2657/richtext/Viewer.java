@@ -3,10 +3,6 @@ package com.dog2657.richtext;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-
-import java.util.ArrayList;
 
 
 public class Viewer extends Canvas {
@@ -28,11 +24,8 @@ public class Viewer extends Canvas {
 
         double lineGap = Model.getInstance().getFont().getLineSpacing();
 
-        Model.getInstance().process_each_line_output(new Model.processLineCallback() {
-            @Override
-            public void process(int line, String content) {
-                gc.fillText(content, 0, (line * lineGap) + 15);
-            }
+        Model.getInstance().process_each_line_output((int line, String content) -> {
+            gc.fillText(content, 0, (line * lineGap) + 15);
         });
 
 
@@ -50,10 +43,13 @@ public class Viewer extends Canvas {
     public Location getCursorLocation(){
         int line = Model.getInstance().get_cursor_line();
         int loc = Model.getInstance().getCursor();
+
+
         double fontWidth = Model.getInstance().getFont().getCharacterWidth();
 
         if(line > 0){
-            loc = Model.getInstance().get_cursor_relative_location();
+            loc = Model.getInstance().getCursorRelativeLocation();
+            System.out.println(loc);
         }
 
         return new Location(fontWidth * loc, line * Model.getInstance().getFont().getLineSpacing());

@@ -38,13 +38,13 @@ public abstract class Controller {
         Model.getInstance().moveCursor(1);
     }
 
-    public static void moveCursorUp(){
+    public static void moveCursorUp(){//TODO: fix
         ArrayList<Integer> breaks = Model.getInstance().getBreaks();
         int currentLine = Model.getInstance().get_cursor_line();
         if(currentLine <= 0)
             return;
 
-        int currentRelativeLoc = Model.getInstance().get_cursor_relative_location();
+        int currentRelativeLoc = Model.getInstance().getCursorRelativeLocation();
         int previousLineLength = (currentLine <= 1)? breaks.get(currentLine -1):breaks.get(currentLine -1) - breaks.get(currentLine -2);
 
         if(currentRelativeLoc >= previousLineLength)
@@ -55,13 +55,13 @@ public abstract class Controller {
             );
     }
 
-    public static void moveCursorDown(){
+    public static void moveCursorDown(){//TODO: fix
         ArrayList<Integer> breaks = Model.getInstance().getBreaks();
         int currentLine = Model.getInstance().get_cursor_line();
         if((breaks.size() -1) <= currentLine)
             return;
 
-        int currentRelativeLoc = Model.getInstance().get_cursor_relative_location();
+        int currentRelativeLoc = Model.getInstance().getCursorRelativeLocation();
 
         if(currentRelativeLoc >= (breaks.get(currentLine + 1) - breaks.get(currentLine)))
             Model.getInstance().setCursor( breaks.get(currentLine + 1) );
@@ -91,7 +91,7 @@ public abstract class Controller {
 
 
     public static void delete(boolean forwards) {
-        int relativeLoc = Model.getInstance().get_cursor_relative_location();
+        int relativeLoc = Model.getInstance().getCursorRelativeLocation();
         if(Model.getInstance().get_cursor_line() <= 0 && relativeLoc <= 0)
             return;
 

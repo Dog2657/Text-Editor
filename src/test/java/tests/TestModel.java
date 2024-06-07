@@ -8,32 +8,13 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestModelLineBreaks {
+public class TestModel {
     private ArrayList<String> get_lines(){
         ArrayList<String> lines = new ArrayList<String>();
-
-        Model.getInstance().process_each_line_output(new Model.processLineCallback(){
-            @Override
-            public void process(int line, String content) {
-                lines.add(content);
-            }
-        });
-
+        Model.getInstance().process_each_line_output((int line, String content) -> { lines.add(content); });
         return lines;
     }
 
-    @Test
-    void parse_text_long(){
-        Model.getInstance().load_file("Aperture Science.\nWe do what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
-
-        ArrayList<Integer> exp = new ArrayList<>();
-        exp.add(17);
-        exp.add(36);
-        exp.add(52);
-        exp.add(79);
-
-        assertEquals(exp, Model.getInstance().getBreaks());
-    }
 
     @Test
     void outputting() {
@@ -165,47 +146,5 @@ public class TestModelLineBreaks {
         expText.add("Except the ones who are dead.");
 
         assertEquals(expText, actText);
-    }
-
-    @Test
-    void get_line_length_start(){
-        Model.getInstance().load_file("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
-
-        assertEquals(17, Model.getInstance().getLineLength(0));
-    }
-
-    @Test
-    void get_line_length_end(){
-        Model.getInstance().load_file("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
-
-        assertEquals(29, Model.getInstance().getLineLength(5));
-    }
-
-    @Test
-    void get_line_length_middle_one(){
-        Model.getInstance().load_file("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
-
-        assertEquals(1, Model.getInstance().getLineLength(1));
-    }
-
-    @Test
-    void get_line_length_middle_Two(){
-        Model.getInstance().load_file("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
-
-        assertEquals(16, Model.getInstance().getLineLength(2));
-    }
-
-    @Test
-    void get_line_length_middle_Three(){
-        Model.getInstance().load_file("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
-
-        assertEquals(15, Model.getInstance().getLineLength(3));
-    }
-
-    @Test
-    void get_line_length_middle_Four(){
-        Model.getInstance().load_file("Aperture Science.\nW\nedo what we must\nBecause we can.\nFor the good of all of us.\nExcept the ones who are dead.");
-
-        assertEquals(26, Model.getInstance().getLineLength(4));
     }
 }
