@@ -1,5 +1,6 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataClasses.Selection;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -22,10 +23,63 @@ public class Viewer extends Canvas {
         gc.setFont(Model.getInstance().getFont().get());
         gc.setFill(Color.WHITESMOKE);
 
+
         double lineGap = Model.getInstance().getFont().getLineSpacing();
 
-        Model.getInstance().process_each_line_output((int line, String content) -> {
-            gc.fillText(content, 0, (line * lineGap) + 15);
+        final boolean[] selectionStyledText = {false};
+
+        Model.getInstance().process_each_line_output((int line, String content, int previousLinesTotal) -> {
+            double lineY = (line * lineGap);
+
+            if(Model.getInstance().getCursor().getSelection() != null){
+                Selection selection = Model.getInstance().getCursor().getSelection();
+
+                double backgroundWidth = content.length() * Model.getInstance().getFont().getCharacterWidth();
+                double horizontalStart = 0;
+
+
+
+                //Check if drawing line which is partially selected
+                if( (!selectionStyledText[0]) && ( selection.getBeginning() <= (previousLinesTotal + content.length())) ){
+                    int charOffset = selection.getBeginning() - previousLinesTotal;
+
+                    horizontalStart = charOffset * Model.getInstance().getFont().getCharacterWidth();
+                    backgroundWidth -= horizontalStart;
+
+                    selectionStyledText[0] = true;
+                }
+
+                boolean isSelectionEnd =  (selectionStyledText[0]) && (selection.getEnding() <= (previousLinesTotal + content.length()) );
+
+                //Checks for the end of the selection
+                if(isSelectionEnd){
+                    int charOffset = (previousLinesTotal + content.length()) - selection.getEnding();
+                    backgroundWidth -= charOffset * Model.getInstance().getFont().getCharacterWidth();
+                }
+
+
+                //Render selection background
+                if(selectionStyledText[0]){
+                    gc.setFill(Color.RED);
+                    gc.fillRect(horizontalStart, lineY + 3,
+                            backgroundWidth,
+                            Model.getInstance().getFont().getFontHeight()
+                    );
+                }
+
+                //Checks for the end of the selection
+                if(isSelectionEnd)
+                    selectionStyledText[0] = false;
+            }
+
+
+
+
+
+
+            gc.setFill(Color.WHITE);
+            gc.fillText(content, 0, lineY + 15);
+
         });
 
 
@@ -44,7 +98,7 @@ public class Viewer extends Canvas {
         int line = Model.getInstance().get_cursor_line();
         double fontWidth = Model.getInstance().getFont().getCharacterWidth();
 
-        int loc = Model.getInstance().getCursor();
+        int loc = Model.getInstance().getCursorPosition();
         if(line > 0)
             loc = Model.getInstance().getCursorRelativeLocation();
 

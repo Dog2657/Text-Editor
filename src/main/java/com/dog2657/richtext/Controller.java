@@ -1,5 +1,8 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataClasses.Selection;
+import javafx.scene.input.MouseEvent;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,10 +35,12 @@ public abstract class Controller {
 
     public static void moveCursorLeft(){
         Model.getInstance().moveCursor(-1);
+        //TODO: Move selection end
     }
 
     public static void moveCursorRight(){
         Model.getInstance().moveCursor(1);
+        //TODO: Move selection end
     }
 
     public static void moveCursorUp(){//TODO: fix
@@ -53,6 +58,7 @@ public abstract class Controller {
 
 
         Model.getInstance().setCursor(newLocation);
+        //TODO: Move selection end
     }
 
     public static void moveCursorDown(){
@@ -67,27 +73,24 @@ public abstract class Controller {
             Model.getInstance().setCursor( breaks.get(currentLine + 1) );
         else
             Model.getInstance().setCursor(breaks.get(currentLine) + currentRelativeLoc + 1);
+
+        //TODO: Move selection end
     }
 
     public static void moveCursor(double x, double y){
-        int pos = 0;
-        int line = 0;
-
-        if(Model.getInstance().getBreaks().size() > 0) {
-            line = (int) Math.floor(y / Model.getInstance().getFont().getLineSpacing());
-            if (line > 0)
-                pos += Model.getInstance().getBreaks().get(line - 1) + 1;
-        }
-
-
-        int character = (int)Math.round(x / Model.getInstance().getFont().getCharacterWidth());
-        if(character > Model.getInstance().getLineLength(line))
-            return;
-        pos += character;
-
-        Model.getInstance().setCursor(pos);
+        Model.getInstance().getCursor().moveToXYLocation(x, y);
+        Model.getInstance().getViewer().update();
+        Model.getInstance().getCursor().setSelection(null);
     }
 
+    public static void handleSelect(MouseEvent event){
+        int position = Model.getInstance().getCursor().translateXYLocation(event.getX(), event.getY());
+
+        if( Model.getInstance().getCursor().getSelection() == null  )
+            Model.getInstance().getCursor().setSelection(new Selection(position));
+        else
+            Model.getInstance().getCursor().getSelection().setEnd(position);
+    }
 
     public static void delete(boolean forwards) {
         int relativeLoc = Model.getInstance().getCursorRelativeLocation();
