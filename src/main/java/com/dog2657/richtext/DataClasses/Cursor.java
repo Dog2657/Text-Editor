@@ -34,7 +34,12 @@ public class Cursor {
         this.position = translateXYLocation(x, y);
     }
 
+
     public int translateXYLocation(double x, double y){
+        return translateXYLocation(x, y, false);
+    }
+
+    public int translateXYLocation(double x, double y, boolean ignoreLineBreaks){
         int cursorPos = 0;
         int line = 0;
 
@@ -63,6 +68,11 @@ public class Cursor {
         }
 
         cursorPos += character;
+
+        if(ignoreLineBreaks)
+            cursorPos -= line;
+
+
 
         return cursorPos;
     }

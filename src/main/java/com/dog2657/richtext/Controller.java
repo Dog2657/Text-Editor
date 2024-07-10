@@ -33,14 +33,34 @@ public abstract class Controller {
         Model.getInstance().moveCursor(1);
     }
 
-    public static void moveCursorLeft(){
+    public static void moveCursorLeft(boolean shiftDown){
+        if(shiftDown){
+            if(Model.getInstance().getCursor().getSelection() == null) {
+                Selection selection = new Selection(Model.getInstance().getCursorPosition());
+                selection.setEnd(Model.getInstance().getCursorPosition() - 1);
+                Model.getInstance().getCursor().setSelection(selection);
+            }else{
+                Selection selection = Model.getInstance().getCursor().getSelection();
+                selection.setEnd(selection.getEnd() - 1);
+            }
+        }
+
         Model.getInstance().moveCursor(-1);
-        //TODO: Move selection end
     }
 
-    public static void moveCursorRight(){
+    public static void moveCursorRight(boolean shiftDown){
+        if(shiftDown){
+            if(Model.getInstance().getCursor().getSelection() == null) {
+                Selection selection = new Selection(Model.getInstance().getCursorPosition());
+                selection.setEnd(Model.getInstance().getCursorPosition() + 1);
+                Model.getInstance().getCursor().setSelection(selection);
+            }else{
+                Selection selection = Model.getInstance().getCursor().getSelection();
+                selection.setEnd(selection.getEnd() + 1);
+            }
+        }
+
         Model.getInstance().moveCursor(1);
-        //TODO: Move selection end
     }
 
     public static void moveCursorUp(){//TODO: fix
@@ -84,7 +104,9 @@ public abstract class Controller {
     }
 
     public static void handleSelect(MouseEvent event){
-        int position = Model.getInstance().getCursor().translateXYLocation(event.getX(), event.getY());
+        int position = Model.getInstance().getCursor().translateXYLocation(event.getX(), event.getY(), false);
+
+        System.out.println(position);
 
         if( Model.getInstance().getCursor().getSelection() == null  )
             Model.getInstance().getCursor().setSelection(new Selection(position));
