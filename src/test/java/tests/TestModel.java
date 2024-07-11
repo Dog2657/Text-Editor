@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestModel {
     private ArrayList<String> get_lines(){
         ArrayList<String> lines = new ArrayList<String>();
-        Model.getInstance().process_each_line_output((int line, String content) -> { lines.add(content); });
+        Model.getInstance().process_each_line_output((int line, String content, int previousLinesTotal) -> { lines.add(content); });
         return lines;
     }
 

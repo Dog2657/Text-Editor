@@ -1,7 +1,7 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.DataClasses.Selection;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 public class App extends Application {
     Viewer viewer;
     Navigation navigation;
+
+    boolean isHeld = false;
 
     @Override
     public void start(Stage stage){
@@ -24,18 +26,18 @@ public class App extends Application {
         border.setCenter(viewer);
         border.setTop(navigation);
 
-        viewer.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Controller.moveCursor(event.getX(), event.getY());
-            }
-        });
+        viewer.setOnMouseClicked((MouseEvent event) -> Controller.moveCursor(event.getX(), event.getY()));
+        viewer.setOnMouseDragged((MouseEvent event) -> Controller.handleSelect(event));
+
+
+
+
 
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()){
-                case LEFT -> Controller.moveCursorLeft();
-                case RIGHT -> Controller.moveCursorRight();
+                case LEFT -> Controller.moveCursorLeft(e.isShiftDown());
+                case RIGHT -> Controller.moveCursorRight(e.isShiftDown());
                 case UP -> Controller.moveCursorUp();
                 case DOWN -> Controller.moveCursorDown();
 
