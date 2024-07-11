@@ -1,6 +1,7 @@
 package com.dog2657.richtext;
 
 import com.dog2657.richtext.components.NavigationButton;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
@@ -11,8 +12,8 @@ import java.io.File;
 
 public class Navigation extends HBox {
     public Navigation(Stage primaryStage){
-        this.setStyle("-fx-background-color: rgb(31, 32, 32)");
-
+        this.setStyle("-fx-background-color: rgb(66, 59, 84); -fx-padding: 8px;");
+        this.setSpacing(8);
         this.getChildren().addAll(fileOpenButton(primaryStage), fileSaveButton(primaryStage));
     }
 
