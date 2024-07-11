@@ -104,7 +104,7 @@ public abstract class Controller {
     }
 
     public static void handleSelect(MouseEvent event){
-        int position = Model.getInstance().getCursor().translateXYLocation(event.getX(), event.getY(), false);
+        int position = Model.getInstance().getCursor().translateXYLocation(event.getX(), event.getY(), true);
 
         System.out.println(position);
 
