@@ -36,8 +36,8 @@ public class App extends Application {
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()){
-                case LEFT -> Controller.moveCursorLeft();
-                case RIGHT -> Controller.moveCursorRight();
+                case LEFT -> Controller.moveCursorLeft(e.isShiftDown());
+                case RIGHT -> Controller.moveCursorRight(e.isShiftDown());
                 case UP -> Controller.moveCursorUp();
                 case DOWN -> Controller.moveCursorDown();
 

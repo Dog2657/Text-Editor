@@ -52,13 +52,6 @@ public class Model {
             throw new RuntimeException(e);
         }
 
-
-
-        //TODO: Remove code below when finished with the rendering of selections
-        Selection s = new Selection(29);
-        s.setEnd(155);
-        this.cursor.setSelection(s);
-
         update();
     }
 
