@@ -20,6 +20,14 @@ public class Selection {
         return start;
     }
 
+
+    public String getContent(){
+        System.out.println(start);
+        System.out.println(end);
+
+        return "";
+    }
+
     public int getEnd() {
         return end;
     }

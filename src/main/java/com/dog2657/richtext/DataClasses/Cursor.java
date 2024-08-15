@@ -1,6 +1,7 @@
 package com.dog2657.richtext.DataClasses;
 
 import com.dog2657.richtext.Model;
+import com.dog2657.richtext.exceptions.SelectionEmptyException;
 import javafx.scene.input.MouseEvent;
 
 public class Cursor {
@@ -24,7 +25,10 @@ public class Cursor {
         this.selection = selection;
     }
 
-    public Selection getSelection() {
+    public Selection getSelection() throws SelectionEmptyException {
+        if(selection == null)
+            throw new SelectionEmptyException();
+
         return selection;
     }
 

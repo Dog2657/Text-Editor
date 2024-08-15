@@ -1,8 +1,9 @@
 package com.dog2657.richtext;
 
+import com.dog2657.richtext.exceptions.SelectionEmptyException;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -28,6 +29,19 @@ public class App extends Application {
 
         Scene scene = new Scene(border, 1350, 700);
         scene.setOnKeyPressed(e -> {
+            if(e.isControlDown()){
+                switch (e.getCode()){
+                    case C -> {
+                        try{
+                            String text = Model.getInstance().getCursor().getSelection().getContent();
+
+                            return;
+                        }catch(SelectionEmptyException error){
+                            System.out.println("Unable to copy selection due to it being empty");
+                        }
+                    }
+                }
+            }
             switch (e.getCode()){
                 case LEFT -> Controller.moveCursorLeft(e.isShiftDown());
                 case RIGHT -> Controller.moveCursorRight(e.isShiftDown());
@@ -46,6 +60,8 @@ public class App extends Application {
             }
         });
 
+
+        //TODO: Make window resizeable
         //Stops window being resized
         stage.setResizable(false);
 

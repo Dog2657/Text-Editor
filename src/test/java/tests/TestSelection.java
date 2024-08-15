@@ -1,10 +1,12 @@
 package tests;
 
+import com.dog2657.richtext.DataClasses.Selection;
 import com.dog2657.richtext.Model;
+import com.dog2657.richtext.exceptions.SelectionEmptyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestSelection {
     @BeforeEach
@@ -53,4 +55,29 @@ public class TestSelection {
         assertEquals(position, "This was a triumph.\nI'm making a note here:\nhuge ".length());
     }
 
+    @Test
+    void getContent(){
+        double x = Model.getInstance().getFont().getCharacterWidth() * 5;
+        int y = Model.getInstance().getFont().getFontHeight() * 3;
+
+        Selection selection = new Selection(0);
+        selection.setEnd("This was a triumph.".length());
+
+        Model.getInstance().getCursor().setSelection(selection);
+
+        try {
+            assertEquals(Model.getInstance().getCursor().getSelection(), "This was a triumph.");
+        } catch (SelectionEmptyException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void getEmptyContent(){
+        AssertionError exception = assertThrows(AssertionError.class, () -> {
+            Model.getInstance().getCursor().getSelection();
+        });
+
+        assertEquals(exception.getMessage(), "Unable to get selection due to it being empty");
+    }
 }
