@@ -74,7 +74,7 @@ public class TestSelection {
 
     @Test
     void getEmptyContent(){
-        AssertionError exception = assertThrows(AssertionError.class, () -> {
+        SelectionEmptyException exception = assertThrows(SelectionEmptyException.class, () -> {
             Model.getInstance().getCursor().getSelection();
         });
 

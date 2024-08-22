@@ -1,5 +1,7 @@
 package com.dog2657.richtext.DataClasses;
 
+import com.dog2657.richtext.Model;
+
 public class Selection {
     private int start;
     private int end;
@@ -22,10 +24,7 @@ public class Selection {
 
 
     public String getContent(){
-        System.out.println(start);
-        System.out.println(end);
-
-        return "";
+        return Model.getInstance().get_text_output().substring(this.start, this.end);
     }
 
     public int getEnd() {

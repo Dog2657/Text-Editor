@@ -1,6 +1,7 @@
 package com.dog2657.richtext;
 
 import com.dog2657.richtext.DataClasses.Selection;
+import com.dog2657.richtext.exceptions.SelectionEmptyException;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -31,7 +32,7 @@ public class Viewer extends Canvas {
         Model.getInstance().process_each_line_output((int line, String content, int previousLinesTotal) -> {
             double lineY = (line * lineGap);
 
-            if(Model.getInstance().getCursor().getSelection() != null){
+            try {
                 Selection selection = Model.getInstance().getCursor().getSelection();
 
                 double backgroundWidth = content.length() * Model.getInstance().getFont().getCharacterWidth();
@@ -70,12 +71,7 @@ public class Viewer extends Canvas {
                 //Checks for the end of the selection
                 if(isSelectionEnd)
                     selectionStyledText[0] = false;
-            }
-
-
-
-
-
+            }catch(SelectionEmptyException error){}
 
             gc.setFill(Color.WHITE);
             gc.fillText(content, 0, lineY + 15);
