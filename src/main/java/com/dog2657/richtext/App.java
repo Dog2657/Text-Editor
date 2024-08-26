@@ -43,7 +43,7 @@ public class App extends Application {
             try {
                 Selection selection = Model.getInstance().getCursor().getSelection();
 
-                System.out.println(String.format("Content '%s'", selection.getContent()));
+                System.out.println(selection.getContent());
 
             } catch (SelectionEmptyException e) {
                 throw new RuntimeException(e);

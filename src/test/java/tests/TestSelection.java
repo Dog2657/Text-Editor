@@ -56,7 +56,7 @@ public class TestSelection {
     }
 
     @Test
-    void getContent(){
+    void getContent_start(){
         double x = Model.getInstance().getFont().getCharacterWidth() * 5;
         int y = Model.getInstance().getFont().getFontHeight() * 3;
 
@@ -66,7 +66,35 @@ public class TestSelection {
         Model.getInstance().getCursor().setSelection(selection);
 
         try {
-            assertEquals(Model.getInstance().getCursor().getSelection(), "This was a triumph.");
+            assertEquals(Model.getInstance().getCursor().getSelection().getContent(), "This was a triumph.");
+        } catch (SelectionEmptyException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void getContent_middle(){
+        Selection selection = new Selection("This was a triumph.I'm making a note here:huge success.".length());
+        selection.setEnd("This was a triumph.I'm making a note here:huge success.It's hard to overstateMy satisfaction.".length());
+
+        Model.getInstance().getCursor().setSelection(selection);
+
+        try {
+            assertEquals("It's hard to overstate\nMy satisfaction.", Model.getInstance().getCursor().getSelection().getContent());
+        } catch (SelectionEmptyException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void getContent_end(){
+        Selection selection = new Selection("This was a triumph.I'm making a note here:huge success.It's hard to overstateMy satisfaction.Aperture Science.We do what we mustBecause we can.For the good of all of us.Except the ones who are dead.But there's no sense cryingOver every mistake.".length());
+        selection.setEnd("This was a triumph.I'm making a note here:huge success.It's hard to overstateMy satisfaction.Aperture Science.We do what we mustBecause we can.For the good of all of us.Except the ones who are dead.But there's no sense cryingOver every mistake.You just keep on tryingTill you run out of cake.And the Science gets done.And you make a neat gun.For the people who areStill alive.".length());
+
+        Model.getInstance().getCursor().setSelection(selection);
+
+        try {
+            assertEquals("You just keep on trying\nTill you run out of cake.\nAnd the Science gets done.\nAnd you make a neat gun.\nFor the people who are\nStill alive.", Model.getInstance().getCursor().getSelection().getContent());
         } catch (SelectionEmptyException e) {
             fail();
         }
