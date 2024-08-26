@@ -1,10 +1,12 @@
 package tests;
 
+import com.dog2657.richtext.DataClasses.Selection;
 import com.dog2657.richtext.Model;
+import com.dog2657.richtext.exceptions.SelectionEmptyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestSelection {
     @BeforeEach
@@ -53,4 +55,57 @@ public class TestSelection {
         assertEquals(position, "This was a triumph.\nI'm making a note here:\nhuge ".length());
     }
 
+    @Test
+    void getContent_start(){
+        double x = Model.getInstance().getFont().getCharacterWidth() * 5;
+        int y = Model.getInstance().getFont().getFontHeight() * 3;
+
+        Selection selection = new Selection(0);
+        selection.setEnd("This was a triumph.".length());
+
+        Model.getInstance().getCursor().setSelection(selection);
+
+        try {
+            assertEquals(Model.getInstance().getCursor().getSelection().getContent(), "This was a triumph.");
+        } catch (SelectionEmptyException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void getContent_middle(){
+        Selection selection = new Selection("This was a triumph.I'm making a note here:huge success.".length());
+        selection.setEnd("This was a triumph.I'm making a note here:huge success.It's hard to overstateMy satisfaction.".length());
+
+        Model.getInstance().getCursor().setSelection(selection);
+
+        try {
+            assertEquals("It's hard to overstate\nMy satisfaction.", Model.getInstance().getCursor().getSelection().getContent());
+        } catch (SelectionEmptyException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void getContent_end(){
+        Selection selection = new Selection("This was a triumph.I'm making a note here:huge success.It's hard to overstateMy satisfaction.Aperture Science.We do what we mustBecause we can.For the good of all of us.Except the ones who are dead.But there's no sense cryingOver every mistake.".length());
+        selection.setEnd("This was a triumph.I'm making a note here:huge success.It's hard to overstateMy satisfaction.Aperture Science.We do what we mustBecause we can.For the good of all of us.Except the ones who are dead.But there's no sense cryingOver every mistake.You just keep on tryingTill you run out of cake.And the Science gets done.And you make a neat gun.For the people who areStill alive.".length());
+
+        Model.getInstance().getCursor().setSelection(selection);
+
+        try {
+            assertEquals("You just keep on trying\nTill you run out of cake.\nAnd the Science gets done.\nAnd you make a neat gun.\nFor the people who are\nStill alive.", Model.getInstance().getCursor().getSelection().getContent());
+        } catch (SelectionEmptyException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void getEmptyContent(){
+        SelectionEmptyException exception = assertThrows(SelectionEmptyException.class, () -> {
+            Model.getInstance().getCursor().getSelection();
+        });
+
+        assertEquals(exception.getMessage(), "Unable to get selection due to it being empty");
+    }
 }

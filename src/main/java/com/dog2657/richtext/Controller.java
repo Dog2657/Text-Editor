@@ -1,6 +1,7 @@
 package com.dog2657.richtext;
 
 import com.dog2657.richtext.DataClasses.Selection;
+import com.dog2657.richtext.exceptions.SelectionEmptyException;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
@@ -35,13 +36,13 @@ public abstract class Controller {
 
     public static void moveCursorLeft(boolean shiftDown){
         if(shiftDown){
-            if(Model.getInstance().getCursor().getSelection() == null) {
+            try{
+                Selection selection = Model.getInstance().getCursor().getSelection();
+                selection.setEnd(selection.getEnd() - 1);
+            }catch (SelectionEmptyException error){
                 Selection selection = new Selection(Model.getInstance().getCursorPosition());
                 selection.setEnd(Model.getInstance().getCursorPosition() - 1);
                 Model.getInstance().getCursor().setSelection(selection);
-            }else{
-                Selection selection = Model.getInstance().getCursor().getSelection();
-                selection.setEnd(selection.getEnd() - 1);
             }
         }
 
@@ -50,13 +51,13 @@ public abstract class Controller {
 
     public static void moveCursorRight(boolean shiftDown){
         if(shiftDown){
-            if(Model.getInstance().getCursor().getSelection() == null) {
+            try{
+                Selection selection = Model.getInstance().getCursor().getSelection();
+                selection.setEnd(selection.getEnd() + 1);
+            }catch (SelectionEmptyException error){
                 Selection selection = new Selection(Model.getInstance().getCursorPosition());
                 selection.setEnd(Model.getInstance().getCursorPosition() + 1);
                 Model.getInstance().getCursor().setSelection(selection);
-            }else{
-                Selection selection = Model.getInstance().getCursor().getSelection();
-                selection.setEnd(selection.getEnd() + 1);
             }
         }
 
@@ -106,12 +107,11 @@ public abstract class Controller {
     public static void handleSelect(MouseEvent event){
         int position = Model.getInstance().getCursor().translateXYLocation(event.getX(), event.getY(), true);
 
-        System.out.println(position);
-
-        if( Model.getInstance().getCursor().getSelection() == null  )
-            Model.getInstance().getCursor().setSelection(new Selection(position));
-        else
+        try{
             Model.getInstance().getCursor().getSelection().setEnd(position);
+        }catch(SelectionEmptyException error) {
+            Model.getInstance().getCursor().setSelection(new Selection(position));
+        }
     }
 
     public static void delete(boolean forwards) {
