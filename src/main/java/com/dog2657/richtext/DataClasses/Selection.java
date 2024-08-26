@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Selection {
     private int start;
-    private int end;
+    private int end = -1;
 
    public Selection(int start){
        this.start = start;
@@ -26,6 +26,9 @@ public class Selection {
 
 
     public String getContent(){
+       if(this.end == -1)
+           return "";
+
         AtomicReference<String> output = new AtomicReference<>("");
 
         Model.getInstance().process_each_line_output((int line, String content, int previousLinesTotal) -> {

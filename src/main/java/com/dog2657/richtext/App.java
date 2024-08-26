@@ -39,7 +39,7 @@ public class App extends Application {
             viewer.update();
         });
 
-        viewer.setOnMouseReleased((MouseEvent event) -> {
+        /*viewer.setOnMouseReleased((MouseEvent event) -> {
             try {
                 Selection selection = Model.getInstance().getCursor().getSelection();
 
@@ -49,7 +49,7 @@ public class App extends Application {
                 throw new RuntimeException(e);
             }
             //Model.getInstance().getCursor().setSelection(null);
-        });
+        });*/
 
         viewer.setOnMouseClicked((MouseEvent event) -> {
             //System.out.println("clicked");
@@ -122,14 +122,16 @@ public class App extends Application {
             if(e.isControlDown()){
                 switch (e.getCode()){
                     case C -> {
-
-
                         try{
-                            System.out.println(Model.getInstance().getCursor().getSelection());
-                            return;
-                            /*String text = Model.getInstance().getCursor().getSelection().getContent();
+                            String text = Model.getInstance().getCursor().getSelection().getContent();
 
-                            return;*/
+                            Clipboard clipboard = Clipboard.getSystemClipboard();
+                            ClipboardContent content = new ClipboardContent();
+
+                            content.putString(text);
+                            clipboard.setContent(content);
+
+                            return;
                         }catch(SelectionEmptyException error){
                             System.out.println("Unable to copy selection due to it being empty");
                         }
