@@ -85,6 +85,63 @@ public class DataStructure {
     }
 
 
+    public void delete_text_new(int start, int end){
+        int totalLength = 0;
+
+        LinkedList<Piece> new_pieces = (LinkedList<Piece>) this.pieces.clone();
+
+        for (int i=0; i<this.pieces.size(); i++) {
+            Piece instance = new_pieces.get(i);
+
+            //Check if piece contains the start
+            if(totalLength < start && (totalLength + instance.getLength()) < start) {
+                totalLength += instance.getLength();
+                continue;
+            }
+
+            int relative_start = (start - totalLength);
+
+            //Check if start and end are within the same piece
+            if(totalLength <= start  && end <= (totalLength + instance.getLength())){
+                Piece deleted = instance.split(relative_start);
+
+                new_pieces.add(i + 1,  deleted.split(end - start));
+
+                this.pieces = new_pieces;
+                return;
+            }
+
+            //If current piece is fully in range
+            if(relative_start <= 0 && (totalLength + instance.getLength()) <= end){
+                new_pieces.remove(instance);
+
+                this.pieces = new_pieces;
+                totalLength += instance.getLength();
+                return;
+            }
+
+
+            //Check if end is at piece's start
+            if(relative_start <= 0 && end < (totalLength + instance.getLength())){
+                new_pieces.set(i, instance.split(end - totalLength));
+
+                this.pieces = new_pieces;
+                totalLength += instance.getLength();
+                return;
+            }
+
+            if((totalLength + instance.getLength()) <= end){
+                instance.split(relative_start);
+                continue;
+            }
+
+
+            totalLength += instance.getLength();
+        }
+
+    }
+
+
     public LinkedList<Piece> getPieces() {
         return pieces;
     }

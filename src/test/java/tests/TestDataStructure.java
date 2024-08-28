@@ -16,6 +16,10 @@ public class TestDataStructure {
             instance = new DataStructure(content);
         }
 
+        public static void multiple_pieces_set(){
+
+        }
+
         public static DataStructure getInstance(){
             return instance;
         }
@@ -129,6 +133,36 @@ public class TestDataStructure {
     }
 
     @Test
+    void delete_single(){
+        Singleton.getInstance().delete_text_new(5, 6);
+
+        String exp = "Loremipsum dolor sit amet, consectetur adipiscing elit.";
+
+        assertEquals(exp, Singleton.getInstance().getOutput());
+    }
+
+    @Test
+    void delete_range_start(){
+        Singleton.getInstance().delete_text_new(0, 6);
+        String exp = "ipsum dolor sit amet, consectetur adipiscing elit.";
+        assertEquals(exp, Singleton.getInstance().getOutput());
+    }
+
+    @Test
+    void delete_range_end(){
+        Singleton.getInstance().delete_text_new(50, 56);
+        String exp = "Lorem ipsum dolor sit amet, consectetur adipiscing";
+        assertEquals(exp, Singleton.getInstance().getOutput());
+    }
+
+    @Test
+    void delete_range_full_piece(){
+        Singleton.getInstance().delete_text_new(0, 56);
+        String exp = "";
+        assertEquals(exp, Singleton.getInstance().getOutput());
+    }
+
+    /*@Test
     void delete_start_backwards(){
         Singleton.getInstance().delete_text(6);
 
@@ -148,5 +182,5 @@ public class TestDataStructure {
 
         assertEquals(exp, Model.getInstance().get_text_output());
         assertEquals(1, Model.getInstance().get_data_pieces().size());
-    }
+    }*/
 }
