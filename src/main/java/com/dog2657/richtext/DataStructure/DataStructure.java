@@ -1,5 +1,6 @@
 package com.dog2657.richtext.DataStructure;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DataStructure {
@@ -85,60 +86,54 @@ public class DataStructure {
     }
 
 
-    public void delete_text_new(int start, int end){
-        int totalLength = 0;
+    public void delete_text_new(int deletion_start, int deletion_end){
+        int absolute_start = 0;
 
-        LinkedList<Piece> new_pieces = (LinkedList<Piece>) this.pieces.clone();
+        LinkedList<Piece> included_pieces = new LinkedList<>();
 
         for (int i=0; i<this.pieces.size(); i++) {
-            Piece instance = new_pieces.get(i);
+            Piece instance = this.pieces.get(i);
 
-            //Check if piece contains the start
-            if(totalLength < start && (totalLength + instance.getLength()) < start) {
-                totalLength += instance.getLength();
-                continue;
-            }
+            if(absolute_start <= deletion_start && deletion_start <= (absolute_start + instance.getLength())){
+                int relative_start = deletion_start - absolute_start;
+                if(relative_start <= 0) {
+                    absolute_start += instance.getLength();
+                    continue;
+                }
 
-            int relative_start = (start - totalLength);
-
-            //Check if start and end are within the same piece
-            if(totalLength <= start  && end <= (totalLength + instance.getLength())){
-                Piece deleted = instance.split(relative_start);
-
-                new_pieces.add(i + 1,  deleted.split(end - start));
-
-                this.pieces = new_pieces;
-                return;
-            }
-
-            //If current piece is fully in range
-            if(relative_start <= 0 && (totalLength + instance.getLength()) <= end){
-                new_pieces.remove(instance);
-
-                this.pieces = new_pieces;
-                totalLength += instance.getLength();
-                return;
+                Piece removed = instance.split(relative_start);
+                included_pieces.add(instance);
+                instance = removed;
+                absolute_start += relative_start;
             }
 
 
-            //Check if end is at piece's start
-            if(relative_start <= 0 && end < (totalLength + instance.getLength())){
-                new_pieces.set(i, instance.split(end - totalLength));
-
-                this.pieces = new_pieces;
-                totalLength += instance.getLength();
-                return;
-            }
-
-            if((totalLength + instance.getLength()) <= end){
-                instance.split(relative_start);
+            //Checks if piece is completely outside the deletion range
+            if(absolute_start < deletion_start || deletion_end <= absolute_start){
+                absolute_start += instance.getLength();
+                included_pieces.add(instance);
                 continue;
             }
 
 
-            totalLength += instance.getLength();
+            if(absolute_start <= deletion_end && deletion_end <= (absolute_start + instance.getLength())){
+                int relative_end = (absolute_start + instance.getLength()) - deletion_end;
+                if(relative_end <= 0){
+                    absolute_start += instance.getLength();
+                    continue;
+                }
+
+                Piece new_instance = instance.split(instance.getLength() - relative_end);
+                included_pieces.add(new_instance);
+                absolute_start += instance.getLength();
+
+                continue;
+            }
+
+            absolute_start += instance.getLength();
         }
 
+        this.pieces = included_pieces;
     }
 
 
