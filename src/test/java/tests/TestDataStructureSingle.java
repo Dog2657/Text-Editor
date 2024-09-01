@@ -3,21 +3,15 @@ package tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.dog2657.richtext.DataStructure.DataStructure;
-import com.dog2657.richtext.Model;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class TestDataStructure {
+public class TestDataStructureSingle {
     private class Singleton{
         private static DataStructure instance;
 
         public static void set(String content){
             instance = new DataStructure(content);
-        }
-
-        public static void multiple_pieces_set(){
-
         }
 
         public static DataStructure getInstance(){
@@ -117,8 +111,6 @@ public class TestDataStructure {
 
         assertEquals(exp, Singleton.getInstance().getOutput());
         assertEquals(3, Singleton.getInstance().getPiecesSize());
-
-
     }
 
     @Test
@@ -161,26 +153,4 @@ public class TestDataStructure {
         String exp = "";
         assertEquals(exp, Singleton.getInstance().getOutput());
     }
-
-    /*@Test
-    void delete_start_backwards(){
-        Singleton.getInstance().delete_text(6);
-
-        String exp = "Loremipsum dolor sit amet, consectetur adipiscing elit.";
-
-        assertEquals(exp, Singleton.getInstance().getOutput());
-    }
-
-
-    @Disabled("Disabled until adding forward delete feature")
-    @Test
-    void delete_start_forwards(){
-        Model.getInstance().setCursor(0);
-        Model.getInstance().delete_text(true);
-
-        String exp = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-
-        assertEquals(exp, Model.getInstance().get_text_output());
-        assertEquals(1, Model.getInstance().get_data_pieces().size());
-    }*/
 }

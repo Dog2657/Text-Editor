@@ -94,16 +94,19 @@ public class DataStructure {
         for (int i=0; i<this.pieces.size(); i++) {
             Piece instance = this.pieces.get(i);
 
+            //Checks if starting piece of deletion range
             if(absolute_start <= deletion_start && deletion_start <= (absolute_start + instance.getLength())){
                 int relative_start = deletion_start - absolute_start;
-                if(relative_start <= 0) {
-                    absolute_start += instance.getLength();
-                    continue;
+
+
+
+                if(relative_start > 0){
+                    //Splits the piece
+                    Piece removed = instance.split(relative_start);
+                    included_pieces.add(instance);
+                    instance = removed;
                 }
 
-                Piece removed = instance.split(relative_start);
-                included_pieces.add(instance);
-                instance = removed;
                 absolute_start += relative_start;
             }
 
@@ -118,11 +121,14 @@ public class DataStructure {
 
             if(absolute_start <= deletion_end && deletion_end <= (absolute_start + instance.getLength())){
                 int relative_end = (absolute_start + instance.getLength()) - deletion_end;
+
+                //Checks if deletion end is at piece's end
                 if(relative_end <= 0){
                     absolute_start += instance.getLength();
                     continue;
                 }
 
+                //Splits the piece
                 Piece new_instance = instance.split(instance.getLength() - relative_end);
                 included_pieces.add(new_instance);
                 absolute_start += instance.getLength();
